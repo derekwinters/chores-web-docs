@@ -77,7 +77,14 @@ plugins:
 
 nav:
   - Home: index.md
-  - API Reference: API.md
+  - API Reference:
+    - Overview & Auth: api/index.md
+    - Chores: api/chores.md
+    - People: api/people.md
+    - Points: api/points.md
+    - Log: api/log.md
+    - Themes: api/themes.md
+    - Config & Health: api/config.md
   - Architecture: ARCHITECTURE.md
   - Developer Guide: DEVELOPER.md
   - Deployment: DEPLOYMENT.md

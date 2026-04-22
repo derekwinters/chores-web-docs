@@ -4,7 +4,7 @@ Complete documentation for the Chores application.
 
 ## Contents
 
-- **[API Documentation](./API.md)** - REST API endpoints, request/response formats, examples
+- **[API Documentation](./api/index.md)** - REST API endpoints, request/response formats, examples
 - **[Architecture](./ARCHITECTURE.md)** - System design, data model, component diagrams
 - **[Developer Guide](./DEVELOPER.md)** - Setup, development workflow, testing
 - **[Deployment](./DEPLOYMENT.md)** - Deployment instructions and configuration
@@ -19,7 +19,7 @@ Visit the application in your browser. See deployment documentation for setup.
 
 1. Read [Developer Guide](./DEVELOPER.md) for local setup
 2. Review [Architecture](./ARCHITECTURE.md) to understand system design
-3. Reference [API Documentation](./API.md) when building features
+3. Reference [API Documentation](./api/index.md) when building features
 
 ## Project Structure
 

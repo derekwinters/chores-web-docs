@@ -77,6 +77,7 @@ plugins:
 
 nav:
   - Home: index.md
+  - User Guide: USER_GUIDE.md
   - API Reference:
     - Overview & Auth: api/index.md
     - Chores: api/chores.md
@@ -85,6 +86,8 @@ nav:
     - Log: api/log.md
     - Themes: api/themes.md
     - Config & Health: api/config.md
+    - Export: api/export.md
+    - Import: api/import.md
   - Architecture: ARCHITECTURE.md
   - Developer Guide: DEVELOPER.md
   - Deployment: DEPLOYMENT.md

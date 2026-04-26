@@ -11,6 +11,7 @@
   "color": "#RRGGBB",
   "goal_7d": integer,
   "goal_30d": integer,
+  "points": integer,
   "preferred_theme": "string|null"
 }
 ```

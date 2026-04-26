@@ -7,7 +7,7 @@ graph TB
     Client["Browser Client<br/>(React)"]
     Frontend["Frontend<br/>(React SPA)"]
     API["REST API<br/>(FastAPI)"]
-    DB["Database<br/>(SQLite)"]
+    DB["Database<br/>(PostgreSQL)"]
     Scheduler["Scheduler<br/>(APScheduler)"]
     
     Client -->|HTTP| Frontend
@@ -21,22 +21,22 @@ graph TB
 
 ```mermaid
 graph TB
-    App["App<br/>(auth context)"]
+    App["App.jsx<br/>(auth context)"]
     
-    Pages["Pages"]
-    Dashboard["Dashboard"]
-    Manage["Manage"]
-    UserDetail["UserDetail"]
-    Settings["Settings"]
+    Pages["Pages/"]
+    Dashboard["Dashboard.jsx"]
+    Chores["Chores.jsx"]
+    UserDetail["UserDetail.jsx"]
+    Settings["Settings.jsx"]
     
-    Components["Components"]
-    UserCard["UserCard"]
-    ChoreList["ChoreList"]
-    ChoreForm["ChoreForm"]
-    ThemeSettings["ThemeSettings"]
-    Log["Log"]
+    Components["Components/"]
+    UserCard["UserCard.jsx"]
+    ChoreList["ChoreList.jsx"]
+    ChoreForm["ChoreForm.jsx"]
+    ThemeSettings["ThemeSettings.jsx"]
+    Log["Log.jsx"]
     
-    Utils["Utils"]
+    Utils["Utils/"]
     Auth["auth.ts"]
     Theme["theme.ts"]
     PersonColors["personColors.ts"]
@@ -47,13 +47,13 @@ graph TB
     App --> Pages
     App --> Components
     Pages --> Dashboard
-    Pages --> Manage
+    Pages --> Chores
     Pages --> UserDetail
     Pages --> Settings
     
     Dashboard --> UserCard
     Dashboard --> ChoreList
-    Manage --> ChoreForm
+    Chores --> ChoreForm
     Settings --> ThemeSettings
     Settings --> Log
     
@@ -70,9 +70,9 @@ graph TB
 
 ```mermaid
 graph TB
-    API["FastAPI App"]
+    API["FastAPI App<br/>(main.py)"]
     
-    Routers["Routers"]
+    Routers["Routers/"]
     AuthRouter["auth.py"]
     ChoresRouter["chores.py"]
     PeopleRouter["people.py"]
@@ -80,28 +80,37 @@ graph TB
     LogRouter["log.py"]
     ThemeRouter["theme.py"]
     ConfigRouter["config.py"]
+    ExportRouter["export.py"]
+    ImportRouter["data_import.py"]
     
-    Services["Services"]
+    Services["Services/"]
     ChoreService["chore_service.py"]
     Scheduler["scheduler.py"]
+    ExportService["export_service.py"]
+    ImportService["import_service.py"]
     
-    Models["Models"]
+    Models["Models/"]
     Person["Person"]
     Chore["Chore"]
     PointsLog["PointsLog"]
     ChoreLog["ChoreLog"]
     TokenBlacklist["TokenBlacklist"]
+    Settings["Settings"]
     
-    Database["SQLite Database"]
+    Database["PostgreSQL Database"]
     
     API --> Routers
     
     AuthRouter --> ChoreService
     ChoresRouter --> ChoreService
+    ExportRouter --> ExportService
+    ImportRouter --> ImportService
     Routers --> Services
     Scheduler --> ChoreService
     
     ChoreService --> Models
+    ExportService --> Models
+    ImportService --> Models
     Routers --> Models
     
     Models --> Database
@@ -299,24 +308,27 @@ stateDiagram-v2
 graph TB
     Frontend["Frontend<br/>(ThemeSettings)"]
     API["Theme API"]
-    Memory["In-Memory<br/>Custom Themes"]
+    Defaults["DEFAULT_THEMES<br/>(hardcoded)"]
+    Memory["Custom Themes<br/>(in-memory)"]
     Database["Database<br/>(Person.preferred_theme)"]
+    CSS["CSS Variables<br/>(--bg, --surface, etc)"]
     
     Frontend -->|GET /theme/list| API
-    API -->|DEFAULT_THEMES| API
-    API -->|_custom_themes| Memory
+    API -->|fetch| Defaults
+    API -->|fetch| Memory
+    API -->|themes list| Frontend
     
     Frontend -->|POST /theme/save| API
-    API -->|save| Memory
+    API -->|store| Memory
     
     Frontend -->|POST /theme/set/{id}| API
-    API -->|save to| Database
-    Database -->|return| Frontend
+    API -->|save| Database
+    Database -->|update| Frontend
     
     Frontend -->|DELETE /theme/delete/{id}| API
     API -->|remove| Memory
     
-    Frontend -->|CSS Variables| CSS["Styles<br/>--bg, --surface, etc"]
+    Frontend -->|apply| CSS
 ```
 
 ## Scheduler Architecture
@@ -336,12 +348,46 @@ graph TB
     Database -->|log action| ChoreLog["ChoreLog<br/>person=system"]
 ```
 
+## Points & Scoring System
+
+Points are awarded when users complete chores, with goal tracking over 7-day and 30-day rolling windows.
+
+```mermaid
+graph TB
+    Completion["User Completes<br/>Chore"]
+    ChoreService["ChoreService<br/>complete_chore()"]
+    PointsLog["PointsLog Entry<br/>(+points)"]
+    PersonAggregate["Person.points<br/>(sum)"]
+    GoalCheck["Check Goals<br/>(7d, 30d)"]
+    
+    Completion -->|call| ChoreService
+    ChoreService -->|create| PointsLog
+    PointsLog -->|aggregate| PersonAggregate
+    PersonAggregate -->|evaluate| GoalCheck
+    GoalCheck -->|display| UI["Dashboard<br/>Points Card"]
+```
+
+### Point Calculation
+
+- **Award:** Chore completion = Chore.points awarded to person
+- **Tracking:** PointsLog record created with (person, points, chore_id, completed_at)
+- **Aggregation:** Person.points = sum of all PointsLog entries for that person
+- **Goals:** Rolling 7-day and 30-day windows calculated from PointsLog timestamps
+- **Reset:** Goals reset automatically at week/month boundaries based on completed_at timestamps
+
+### Models
+
+- **Person.points** – Total lifetime points (sum of all PointsLog)
+- **Person.goal_7d** – Target points for 7-day rolling window
+- **Person.goal_30d** – Target points for 30-day rolling window
+- **PointsLog** – Transaction log: (id, person, points, chore_id, completed_at)
+
 ## Deployment Architecture
 
 ### Development
 
 ```
-Frontend (npm dev)     -->  Backend (uvicorn)  -->  SQLite DB
+Frontend (npm dev)     -->  Backend (uvicorn)  -->  PostgreSQL
 http://localhost:5173     http://localhost:8000
 ```
 
@@ -349,10 +395,115 @@ http://localhost:5173     http://localhost:8000
 
 ```
 Docker Compose:
-  - frontend:3000 (Nginx)    -->  backend:8000 (FastAPI)  -->  SQLite
-  - Backend initializes DB on startup
+  - frontend:3000 (Nginx)    -->  backend:8000 (FastAPI)  -->  PostgreSQL
+  - Backend initializes schema on startup
+  - Scheduler runs inside backend container
+  - Database persists in volume /var/lib/postgresql/data
+```
+
+### Development
+
+```
+Frontend (npm dev)     -->  Backend (uvicorn)  -->  PostgreSQL
+http://localhost:5173     http://localhost:8000
+```
+
+### Production
+
+```
+Docker Compose:
+  - frontend:3000 (Nginx)    -->  backend:8000 (FastAPI)  -->  PostgreSQL
+  - Backend initializes schema on startup
   - Scheduler runs inside backend container
 ```
+
+## Roles & Permissions
+
+Two user roles with distinct capabilities:
+
+### Admin Role
+- Create/delete users
+- Create/modify/delete chores
+- Modify other users' settings and goals
+- Export and import system data
+- Access admin panel
+- Perform all regular user operations
+
+### Regular User Role
+- View all chores and assignments
+- Complete/skip assigned chores
+- View personal points and progress
+- Modify own settings and goals
+- View audit log of actions
+- Cannot create or modify chores
+- Cannot manage other users
+
+### Access Control
+
+- **is_admin flag** in Person model determines role
+- **Dependency injection** enforces auth checks via `get_current_user`
+- **Route protection** via FastAPI `Depends(get_current_user)` on all protected endpoints
+- **Admin-only routes** explicitly check `current_user.is_admin`
+
+## Design Decisions & Rationale
+
+### Database: PostgreSQL
+
+**Why:** 
+- Reliability and data integrity for multi-user households
+- ACID compliance ensures consistency in point tracking and chore state
+- Production-ready with replication options
+- Scales better than SQLite for concurrent requests
+
+**Trade-off:** Requires database server vs. file-based SQLite
+
+### Scheduler: APScheduler
+
+**Why:**
+- Embedded scheduler (no external service required)
+- Simple Python integration
+- Automatic chore state transitions without manual intervention
+- Runs in-process, no deployment complexity
+
+**Trade-off:** Single-process scheduler, not distributed (sufficient for household use)
+
+### Authentication: JWT with 365-Day Expiration
+
+**Why:**
+- Stateless authentication reduces server memory usage
+- 365-day expiration provides convenience (no frequent re-login)
+- Simple to implement in single-page application
+
+**Trade-off:** Long expiration reduces security window; longer refresh token required for truly secure deployments
+
+### Points System: Sum-Based Aggregation
+
+**Why:**
+- Simple, transparent scoring (points = effort)
+- Historical tracking via PointsLog for audit
+- Supports rolling window goals (7-day, 30-day)
+
+**Trade-off:** No decay or weighting; old points count equally to recent points
+
+### Frontend: React Query for State Management
+
+**Why:**
+- Client-side caching reduces API calls
+- Automatic cache invalidation on mutations
+- Optimistic updates improve perceived performance
+- Handles loading and error states cleanly
+
+**Trade-off:** Server-side state not shared across browser tabs (acceptable for household app)
+
+### Architecture: Layered (Router → Service → Model → Database)
+
+**Why:**
+- Clean separation of concerns
+- Testable business logic in services
+- API contracts defined in schemas
+- Easy to extend with new endpoints
+
+**Trade-off:** More files/structure than monolithic approach
 
 ## Security Considerations
 

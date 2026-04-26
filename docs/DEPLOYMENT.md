@@ -43,28 +43,59 @@ This starts:
 
 ## Configuration
 
-### Environment Variables
+### Environment Variables Reference
 
-**Backend (.env or compose):**
-```
-DATABASE_URL=sqlite:///./app.db
-CORS_ORIGINS=http://localhost:3000
-ENVIRONMENT=development
-LOG_LEVEL=INFO
-```
+#### Backend Environment Variables
 
-**Frontend (vite.config.js):**
-```javascript
-VITE_API_URL=http://backend:8000/api
-```
+| Variable | Type | Required | Development | Production | Description |
+|----------|------|----------|-------------|-----------|-------------|
+| `DATABASE_URL` | string | Yes | `postgresql+asyncpg://chores:chores@db/chores` | `postgresql+asyncpg://user:pass@db.example.com/chores` | PostgreSQL async connection string |
+| `CORS_ORIGINS` | string | Yes | `http://localhost:3000` | `https://yourdomain.com` | Frontend origin for CORS validation |
+| `ENVIRONMENT` | string | Yes | `development` | `production` | Environment mode (affects logging, debug, etc.) |
+| `LOG_LEVEL` | string | No | `INFO` | `INFO` or `WARNING` | Logging level (DEBUG, INFO, WARNING, ERROR) |
+| `JWT_SECRET` | string | Yes (prod) | auto-generated | your-secret-key-here | Secret for JWT token signing |
+| `JWT_EXPIRATION_DAYS` | int | No | `365` | `365` | JWT token expiration in days |
+
+#### Frontend Environment Variables
+
+| Variable | Type | Required | Development | Production | Description |
+|----------|------|----------|-------------|-----------|-------------|
+| `VITE_API_URL` | string | Yes | `http://backend:8000/api` | `https://yourdomain.com/api` | Backend API base URL |
 
 ### Database
 
-- **Development:** SQLite in `backend/app.db`
-- **Production:** Can use PostgreSQL by changing DATABASE_URL
-  ```
-  DATABASE_URL=postgresql://user:pass@host/dbname
-  ```
+**Primary Database: PostgreSQL**
+
+Connection format:
+```
+postgresql+asyncpg://username:password@host:5432/database_name
+```
+
+**In docker-compose (development):**
+```yaml
+db:
+  image: postgres:16-alpine
+  environment:
+    POSTGRES_USER: chores
+    POSTGRES_PASSWORD: chores
+    POSTGRES_DB: chores
+```
+
+**In production:**
+- Use external PostgreSQL instance
+- Update DATABASE_URL with production credentials
+- Ensure database user has CREATE/ALTER privileges for schema initialization
+- Backend auto-creates tables on startup via SQLAlchemy
+- No manual migrations needed (schema-first approach)
+
+**Schema Overview:**
+
+- **Person** – Users (id, name, username, password_hash, is_admin, color, goals, points)
+- **Chore** – Task definitions (id, name, schedule_type, assignment_type, points, state)
+- **PointsLog** – Point transactions (id, person_id, points, chore_id, completed_at)
+- **ChoreLog** – Audit log (id, chore_id, person_id, action, timestamp)
+- **Settings** – System config (key, value)
+- **TokenBlacklist** – Invalidated tokens (token_jti, expires_at)
 
 ## Security
 
@@ -172,26 +203,120 @@ lsof -i :3000
 kill -9 <PID>
 ```
 
-### Database Lock
+### PostgreSQL Connection Issues
 
 ```bash
-# Reset database
-docker-compose exec backend rm app.db
-docker-compose exec backend python -c "from app.database import engine; ..."
+# Verify PostgreSQL is running
+docker-compose ps | grep db
+
+# Check logs
+docker-compose logs db
+
+# Test connection from backend
+docker-compose exec backend python -c \
+  "from app.database import engine; \
+   import asyncio; \
+   asyncio.run(engine.connect())"
+```
+
+**Common issues:**
+- DATABASE_URL format incorrect (missing `+asyncpg`)
+- PostgreSQL password wrong
+- Database user missing CREATE privilege
+- Port 5432 not exposed or already in use
+- Network connectivity between containers
+
+### Database Performance Issues
+
+**Slow queries:**
+```bash
+# Enable query logging in PostgreSQL
+# Add to docker-compose.yml postgres environment:
+POSTGRES_INIT_ARGS: "-c log_statement=all"
+
+# Check logs
+docker-compose logs db | grep query
+```
+
+**Connection pool issues:**
+```bash
+# Check active connections
+docker-compose exec db psql -U chores -d chores \
+  -c "SELECT count(*) FROM pg_stat_activity;"
 ```
 
 ### CORS Errors
 
-1. Check frontend `VITE_API_URL` points to backend
-2. Verify backend CORS middleware allows frontend origin
-3. Check browser console for actual error
+1. Check frontend `VITE_API_URL` points to backend (should match `CORS_ORIGINS`)
+2. Verify backend CORS middleware allows frontend origin in docker-compose.yml
+3. Check browser console Network tab for actual error (look at Preflight OPTIONS request)
+4. Production: ensure CORS_ORIGINS uses HTTPS if frontend is HTTPS
+
+**Fix:**
+```yaml
+# docker-compose.yml
+backend:
+  environment:
+    CORS_ORIGINS: "https://yourdomain.com"  # Must match frontend origin exactly
+```
 
 ### Authentication Issues
 
-1. Check token in localStorage: `localStorage.getItem('token')`
-2. Verify token in Authorization header: `Authorization: Bearer <token>`
-3. Check token hasn't expired (365 days)
-4. Verify user still exists in database
+1. **Token not present:**
+   - Check token in localStorage: `localStorage.getItem('token')`
+   - Verify login was successful (check network tab)
+   - Check browser accepts/sends cookies
+
+2. **Invalid token:**
+   - Verify token in Authorization header: `Authorization: Bearer <token>`
+   - Check token format (should be JWT, not just a string)
+   - Verify JWT_SECRET matches between deployments
+
+3. **Token expired:**
+   - Check token expiration: `jwt.decode(token, options={"verify_signature": False})`
+   - JWT tokens expire after 365 days, user must login again
+   - For long-lived sessions, consider refresh token pattern
+
+4. **User no longer exists:**
+   - Verify user still exists in database
+   - Check if user was deleted after login
+   - Verify username matches between frontend and backend
+
+**Debug auth issues:**
+```bash
+# Check token blacklist
+docker-compose exec db psql -U chores -d chores \
+  -c "SELECT * FROM token_blacklist;"
+
+# Check active users
+docker-compose exec db psql -U chores -d chores \
+  -c "SELECT id, username, is_admin FROM person;"
+```
+
+### Container Startup Issues
+
+```bash
+# View startup logs
+docker-compose logs backend --tail 100
+
+# Common errors:
+# "Connection refused" - database not ready
+#   Solution: Wait for db container to be healthy, check logs
+# "Address already in use" - port conflict
+#   Solution: Change ports in docker-compose.yml or kill existing process
+# "Schema mismatch" - database schema outdated
+#   Solution: Backend auto-creates schema on startup, check db logs
+```
+
+### Network Issues Between Containers
+
+```bash
+# Test backend can reach database
+docker-compose exec backend ping db
+
+# Test frontend can reach backend
+docker-compose exec frontend wget -O- http://backend:8000/health
+```
 
 ## Scaling
 
@@ -297,15 +422,45 @@ docker-compose down
 - Keep backups on separate system
 - Document all manual changes to database
 
-## Production Checklist
+## Production Deployment Checklist
 
-- [ ] SSL/HTTPS configured
-- [ ] CORS origins restricted
-- [ ] Database backups automated
-- [ ] Monitoring/alerting set up
-- [ ] Log aggregation configured
-- [ ] Authentication tokens secure
-- [ ] Regular security updates
-- [ ] Disaster recovery plan tested
-- [ ] Rate limiting enabled (if needed)
-- [ ] Health checks monitoring
+### Pre-Deployment (Before Deploy)
+- [ ] Database fully backed up
+- [ ] All tests passing locally (`npm test -- --run`)
+- [ ] Code reviewed and approved
+- [ ] Environment variables configured for production
+- [ ] SSL/HTTPS certificates obtained and valid
+- [ ] Disaster recovery plan documented and tested
+- [ ] Rollback procedure documented
+- [ ] All team members notified of deployment window
+
+### During Deployment
+- [ ] Monitor health endpoint during startup: `curl https://yourdomain.com/health`
+- [ ] Check backend logs for errors: `docker logs <backend-container>`
+- [ ] Verify frontend loads without errors (browser console check)
+- [ ] Test login with known user account
+- [ ] Verify API endpoints respond: `curl https://yourdomain.com/api/people`
+- [ ] Check database connectivity and query performance
+- [ ] Monitor system resources (CPU, memory, disk)
+
+### Post-Deployment (After Deploy)
+- [ ] Smoke test: Complete a full chore workflow
+- [ ] Verify data integrity (check person count, chore count)
+- [ ] Confirm backups still working
+- [ ] Review monitoring dashboards (if configured)
+- [ ] Check log aggregation system (if configured)
+- [ ] Verify users can access from multiple browsers
+- [ ] Document deployment completion and any issues
+- [ ] Keep backup of pre-deployment database for 7 days minimum
+
+### Ongoing Production Operations
+- [ ] CORS origins restricted to your domain only
+- [ ] Database backups scheduled and tested weekly
+- [ ] Monitoring/alerting configured for uptime
+- [ ] Log aggregation configured and reviewed regularly
+- [ ] Authentication tokens using secure SECRET key (not default)
+- [ ] Regular security updates (monthly review of dependencies)
+- [ ] Health checks monitored (set up uptime monitoring service)
+- [ ] Rate limiting enabled if public-facing
+- [ ] Change password for default admin account
+- [ ] Remove development/test data before going live

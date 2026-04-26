@@ -4,6 +4,7 @@ Complete documentation for the Chores application.
 
 ## Contents
 
+- **[User Guide](./USER_GUIDE.md)** - How to use the app, features, FAQ, troubleshooting
 - **[API Documentation](./api/index.md)** - REST API endpoints, request/response formats, examples
 - **[Architecture](./ARCHITECTURE.md)** - System design, data model, component diagrams
 - **[Developer Guide](./DEVELOPER.md)** - Setup, development workflow, testing

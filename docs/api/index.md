@@ -86,6 +86,8 @@ All errors follow this format:
 }
 ```
 
+### Response Codes
+
 | Code | Meaning |
 |------|---------|
 | 200 | Success |
@@ -96,3 +98,45 @@ All errors follow this format:
 | 403 | Forbidden — insufficient permissions |
 | 404 | Not found |
 | 500 | Internal server error |
+
+### Error Message Strategy
+
+**Backend (FastAPI):**
+- All `HTTPException` responses include user-readable `detail` strings
+- Unhandled exceptions are caught by a global exception handler and return: `{"detail": "Something went wrong. Please try again."}`
+- Backend is responsible for providing clear, user-facing error messages in the `detail` field
+
+**Frontend (client.js):**
+- If backend returns a `detail` field, it is displayed as-is to the user
+- If no `detail` is available (e.g., network error), the frontend uses a status code fallback map:
+  - **400** → "Invalid input — check your values"
+  - **401** → "Session expired, please log in"
+  - **403** → "You don't have permission to do that"
+  - **404** → "Not found"
+  - **409** → "Already exists"
+  - **422** → "Invalid input — check your values"
+  - **500** → "Something went wrong. Please try again."
+  - **503** → "Service unavailable, please try again later"
+
+### Examples
+
+**Validation Error (422):**
+```json
+{
+  "detail": "Invalid input — check your values"
+}
+```
+
+**Unhandled Exception (500):**
+```json
+{
+  "detail": "Something went wrong. Please try again."
+}
+```
+
+**Auth Error (401):**
+```json
+{
+  "detail": "Session expired, please log in"
+}
+```

@@ -331,6 +331,80 @@ graph TB
     Frontend -->|apply| CSS
 ```
 
+## Error Handling
+
+Error handling spans both backend and frontend, ensuring users see clear, actionable messages instead of technical error codes.
+
+### Backend Error Flow
+
+```mermaid
+graph TB
+    Request["HTTP Request"]
+    Router["Router Handler"]
+    Exception{"Exception<br/>Raised?"}
+    HTTPEx["HTTPException<br/>(intentional)"]
+    GlobalEx["Unhandled<br/>Exception"]
+    Detail["User-Friendly<br/>Detail String"]
+    Response["JSON Response<br/>{detail: string}"]
+    
+    Request -->|processed by| Router
+    Router --> Exception
+    Exception -->|no| Detail
+    Exception -->|yes| HTTPEx
+    Exception -->|unhandled| GlobalEx
+    HTTPEx --> Detail
+    GlobalEx -->|caught| Detail
+    Detail --> Response
+    Response -->|sent to| Frontend["Frontend<br/>(client.js)"]
+```
+
+**Backend Responsibilities:**
+- **HTTPException handlers** provide user-readable `detail` strings (e.g., "Invalid input — check your values")
+- **Global exception handler** (in `main.py`) catches unhandled exceptions and returns generic message: "Something went wrong. Please try again."
+- All error responses use consistent `{"detail": "message"}` format
+
+### Frontend Error Flow
+
+```mermaid
+graph TB
+    Response["API Response<br/>(JSON)"]
+    Check{"Has<br/>detail<br/>Field?"}
+    BackendMsg["Use Backend<br/>Detail Message"]
+    Fallback["Status Code<br/>Fallback Map"]
+    Map["Map Status Code:<br/>400, 401, 403, 404, 409,<br/>422, 500, 503"]
+    Message["User Error<br/>Message"]
+    Display["Display in UI<br/>(Login, Toast, etc.)"]
+    
+    Response -->|check| Check
+    Check -->|yes| BackendMsg
+    Check -->|no| Fallback
+    BackendMsg --> Message
+    Fallback --> Map
+    Map --> Message
+    Message --> Display
+```
+
+**Frontend Responsibilities:**
+- Prefer backend `detail` field if available
+- Fall back to status code map when detail missing (network errors, missing response body)
+- Never display raw HTTP status strings (e.g., "HTTP 500")
+- Clean error display: remove prefixes like "ERROR: " from UI messages
+
+### Status Code Fallback Map
+
+When backend doesn't provide a detail message:
+
+| Status | Message |
+|--------|---------|
+| 400 | Invalid input — check your values |
+| 401 | Session expired, please log in |
+| 403 | You don't have permission to do that |
+| 404 | Not found |
+| 409 | Already exists |
+| 422 | Invalid input — check your values |
+| 500 | Something went wrong. Please try again. |
+| 503 | Service unavailable, please try again later |
+
 ## Scheduler Architecture
 
 ```mermaid

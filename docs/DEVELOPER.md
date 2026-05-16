@@ -237,12 +237,37 @@ describe("MyComponent", () => {
 });
 ```
 
-### Styling
+### Styling & Theming
 
 - Use CSS files (e.g., `MyComponent.css`)
-- Reference CSS variables: `var(--bg)`, `var(--accent)`, etc.
+- **Always use CSS variables for colors:** `var(--bg)`, `var(--accent)`, etc.
+- **Never hardcode hex values** – breaks theme switching
 - Mobile-first responsive design
-- Theme colors already defined in `App.css`
+- Theme colors defined in `App.css` via 9-color system
+
+#### 9-Color Theme System
+
+All application theming uses a unified 9-color palette:
+
+| Variable | Purpose |
+|----------|---------|
+| `--bg` | Page background |
+| `--surface` | Card/panel background (layer 1) |
+| `--surface2` | Elevated surface (layer 2), inputs, tags |
+| `--accent` | Highlights, links, focus rings |
+| `--primary` | Primary buttons and controls |
+| `--secondary` | Secondary buttons |
+| `--success` | Positive states |
+| `--warning` | Caution states |
+| `--error` | Destructive actions / validation errors |
+
+**Rules:**
+- Use `--primary` for buttons (not `--accent`)
+- Use `--accent` for links and highlights (not `--primary`)
+- Use `--error` for destructive actions (no `--danger`)
+- For semi-transparent overlays: `rgba(var(--error-rgb), <alpha>)`
+
+See `.claude/skills/theme-guide/SKILL.md` for complete reference.
 
 ## Debugging
 

@@ -57,7 +57,12 @@ Use the menu (top-left) to access:
 ### View All Chores
 
 1. Click **Chores** in the menu
-2. See all household chores with their:
+2. See summary statistics at the top:
+   - **Total Chores** – All household chores
+   - **Total Points** – Available from all chores
+   - **Points (7d)** – Points you can earn in next 7 days
+   - **Points Due Next 7d** – Chores due in next week (by date)
+3. See all chores listed with their:
    - Name and description
    - Schedule (weekly, monthly, etc.)
    - Points awarded

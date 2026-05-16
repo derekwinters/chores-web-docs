@@ -56,3 +56,34 @@ Update person settings. Admin or self only.
 Delete person. Admin only — cannot delete self.
 
 **Response (204):** No content
+
+## POST /people/{person_id}/redeem
+Redeem points for a person. Admin only. Deducts points from person's total.
+
+**Request:**
+```json
+{
+  "amount": integer,
+  "reason": "string"
+}
+```
+
+**Response (200):** Updated person with reduced points  
+**Response (400):** Invalid amount or insufficient points  
+**Response (404):** Person not found
+
+## GET /people/{person_id}/redemptions
+Get redemption history for a person.
+
+**Response (200):**
+```json
+[
+  {
+    "id": integer,
+    "person_id": integer,
+    "amount": integer,
+    "reason": "string",
+    "timestamp": "ISO8601"
+  }
+]
+```

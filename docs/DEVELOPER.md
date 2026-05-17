@@ -55,6 +55,51 @@ npm run dev
 4. Create first admin user through setup page
 5. Login with created credentials
 
+## Issue Lifecycle
+
+All work in this repository follows a 4-stage lifecycle controlled by GitHub issue labels.
+
+### Stages
+
+| Stage | Label | Description |
+|-------|-------|-------------|
+| 1. Concept | *(none)* | Raw idea recorded, not yet triaged |
+| 2. Context & Assignment | `ready-to-grill` | Triage complete, milestone assigned |
+| 3. Grilling Complete | `ready-for-work` | Grilling done, implementation contract exists |
+| 4. In Development | `in-development` | Agent actively working on the issue |
+
+A stage must not begin unless the proper label is assigned.
+
+### Agents & Entry Points
+
+| Agent | Trigger | Action |
+|-------|---------|--------|
+| `github-issue-triage-orchestrator` | Manual or webhook | Triages issue, assigns milestone, applies `ready-to-grill` |
+| `/grill-with-docs issue <N>` | Manual | Runs grilling session, posts structured comment, flips label to `ready-for-work` |
+| `github-issue-implementation-orchestrator` | Manual | Implements issue end-to-end via TDD, creates PR |
+
+### Grilling
+
+Grilling is required before development begins. Run `/grill-with-docs issue <N>` to:
+
+1. Conduct a structured session covering all 4 areas: backend, database, frontend, docs
+2. Post a structured grilling comment on the issue (decisions, impact areas, behaviors checklist)
+3. Remove `ready-to-grill`, apply `ready-for-work`
+
+### Development
+
+The implementation orchestrator handles all development autonomously:
+
+1. Validates `ready-for-work` label and grilling comment presence
+2. Creates `<type>-issue-<N>` branch from updated main
+3. Drafts documentation updates (`docs:` commit)
+4. Runs TDD loop — derives behaviors from grilling checklist, red-green-refactor cycles
+5. Full test suite must pass
+6. Docker verify + user approval pause
+7. Code commit (`feat:/fix:/refactor:`)
+8. Doc-validate — reconciles docs against implementation
+9. Push + PR creation (removes `in-development`)
+
 ## Development Workflow
 
 ### Running Tests

@@ -443,18 +443,30 @@ graph TB
 
 ### Point Calculation
 
-- **Award:** Chore completion = Chore.points awarded to person
-- **Tracking:** PointsLog record created with (person, points, chore_id, completed_at)
-- **Aggregation:** Person.points = sum of all PointsLog entries for that person
+- **Award:** Chore completion = Chore.points awarded to person (by username)
+- **Tracking:** PointsLog record created with (person=username, points, chore_id, completed_at)
+- **Display:** `display_points = sum(PointsLog.points for person) - points_redeemed` — computed live from PointsLog
+- **Person.points:** Running total kept in sync with PointsLog; incremented on completion, adjusted on admin edit/delete
 - **Goals:** Rolling 7-day and 30-day windows calculated from PointsLog timestamps
-- **Reset:** Goals reset automatically at week/month boundaries based on completed_at timestamps
 
 ### Models
 
-- **Person.points** – Total lifetime points (sum of all PointsLog)
+- **Person.points** – Running total (floor 0); kept in sync with PointsLog sum
 - **Person.goal_7d** – Target points for 7-day rolling window
 - **Person.goal_30d** – Target points for 30-day rolling window
 - **PointsLog** – Transaction log: (id, person, points, chore_id, completed_at)
+  - `person` stores **username** (not display name)
+  - Legacy entries with display name are normalized to username at startup
+
+### Admin Points Log Management
+
+When an admin edits or deletes a PointsLog entry via `PATCH /admin/db/points-log/{id}` or `DELETE /admin/db/points-log/{id}`, `Person.points` is adjusted to maintain consistency:
+
+- **Points change only** (same person): `Person.points` adjusted by delta (`new - old`), floored at 0
+- **Person reassignment** (different person, points same or changed): old person loses `old_points`, new person gains `new_points` — no double adjustment
+- **Delete**: person loses the log's points, floored at 0
+- **Person lookup**: matched by username or display name — handles any legacy entries not yet normalized
+- **Missing person**: if no matching `Person` row found, that side's adjustment is silently skipped; operation still succeeds
 
 ## Deployment Architecture
 

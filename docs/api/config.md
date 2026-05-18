@@ -30,16 +30,18 @@ Get current update check status. Admin only.
 **Response (200):**
 ```json
 {
-  "last_check": "ISO8601|null",
-  "available_version": "string|null",
-  "is_checking": boolean,
-  "enabled": boolean,
-  "interval_hours": integer
+  "last_checked_at": "ISO8601|null",
+  "latest_version": "string|null",
+  "update_available": boolean,
+  "check_enabled": boolean,
+  "check_interval_hours": integer
 }
 ```
 
 ## POST /config/updates/check
 Manually trigger an update check. Admin only.
+
+Always performs a real check against GitHub — bypasses both the interval throttle and in-memory version cache regardless of when the last check ran.
 
 **Response (200):** Updated status (see above)
 

@@ -115,14 +115,18 @@ Delete chore and all associated points history.
 ---
 
 ## POST /chores/{chore_id}/complete
-Mark chore completed, award points.
+Mark chore completed, award points. The Completer receives the Credit.
 
 **Request:**
 ```json
 {
-  "completed_by": "string|null"
+  "completed_by": "string (optional)"
 }
 ```
+
+- `completed_by`: Username of the **Completer**. Optional — omit or pass `null` to fall back to the authenticated user.
+- When `current_assignee === null` (no Assignee), the frontend enforces a required **Completer** selection before calling this endpoint.
+- The Completer receives the Credit (Points Log entry), regardless of which user made the HTTP request.
 
 **Response (200):** Updated chore
 

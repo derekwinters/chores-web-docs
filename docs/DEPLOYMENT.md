@@ -190,6 +190,35 @@ Monitor via docker stats:
 docker stats
 ```
 
+### Prometheus Scraping
+
+The backend exposes a Prometheus metrics endpoint at `GET /metrics` (public, no authentication).
+
+Example `prometheus.yml` scrape configuration:
+
+```yaml
+scrape_configs:
+  - job_name: chores-web
+    static_configs:
+      - targets:
+          - backend:8000   # use your backend host/port
+    metrics_path: /metrics
+    scrape_interval: 30s
+```
+
+Available application metrics:
+- `chores_total{state, disabled}` — chore counts by state and disabled flag
+- `chores_due_now_total` — chores currently due
+- `chores_due_soon_total` — chores due within the configured `due_soon_days` window
+- `chores_due_now_by_person{person}` — due chores per assignee
+- `people_total` — registered user count
+- `points_awarded_total` — total points across all PointsLog entries
+- `chore_completions_by_person{person, window}` — completions per person for 7d and 30d windows
+
+Process and HTTP request metrics are also included automatically.
+
+No Docker Compose Prometheus service is bundled — add your own Prometheus container or use an external Prometheus instance pointing at the backend.
+
 ## Troubleshooting
 
 ### Port Already in Use

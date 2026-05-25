@@ -156,6 +156,30 @@ Frontend tests: 205/205 passing ✓
 Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>
 ```
 
+## Observability
+
+### Metrics Endpoint
+
+The backend exposes a Prometheus-compatible metrics endpoint:
+
+**`GET /metrics`** — Returns metrics in Prometheus text format. Public, no authentication required.
+
+Available metrics:
+
+| Metric | Type | Labels | Description |
+|--------|------|--------|-------------|
+| `chores_total` | Gauge | `state`, `disabled` | Total chores grouped by state and disabled flag |
+| `chores_due_now_total` | Gauge | — | Chores where `state='due'` |
+| `chores_due_soon_total` | Gauge | — | Chores where `next_due <= today + due_soon_days` |
+| `chores_due_now_by_person` | Gauge | `person` | Due chores grouped by current assignee |
+| `people_total` | Gauge | — | Total user count |
+| `points_awarded_total` | Gauge | — | Sum of all PointsLog entries |
+| `chore_completions_by_person` | Gauge | `person`, `window` | Completions in 7d and 30d windows |
+
+Process metrics (CPU, memory, file descriptors) are provided automatically by `prometheus_client`.
+
+HTTP request metrics (request count, duration histogram by path) are provided by `starlette-prometheus` middleware.
+
 ## API Development
 
 ### Adding a New Endpoint

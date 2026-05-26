@@ -4,11 +4,11 @@ Complete documentation for the Chores application.
 
 ## Contents
 
-- **[User Guide](./USER_GUIDE.md)** - How to use the app, features, FAQ, troubleshooting
+- **[User Guide](./user-guide/getting-started.md)** - How to use the app, features, FAQ, troubleshooting
 - **[API Documentation](./api/index.md)** - REST API endpoints, request/response formats, examples
-- **[Architecture](./ARCHITECTURE.md)** - System design, data model, component diagrams
-- **[Developer Guide](./DEVELOPER.md)** - Setup, development workflow, testing
-- **[Deployment](./DEPLOYMENT.md)** - Deployment instructions and configuration
+- **[Architecture](./architecture/overview.md)** - System design, data model, component diagrams
+- **[Developer Guide](./developer/setup-and-workflow.md)** - Setup, development workflow, testing
+- **[Deployment](./deployment/setup.md)** - Deployment instructions and configuration
 
 ## Quick Start
 
@@ -18,8 +18,8 @@ Visit the application in your browser. See deployment documentation for setup.
 
 ### For Developers
 
-1. Read [Developer Guide](./DEVELOPER.md) for local setup
-2. Review [Architecture](./ARCHITECTURE.md) to understand system design
+1. Read [Developer Guide](./developer/setup-and-workflow.md) for local setup
+2. Review [Architecture](./architecture/overview.md) to understand system design
 3. Reference [API Documentation](./api/index.md) when building features
 
 ## Project Structure
@@ -78,7 +78,7 @@ Swagger UI: `http://localhost:8000/docs`
 
 ## Contributing
 
-1. Follow the architecture patterns in [Architecture](./ARCHITECTURE.md)
+1. Follow the architecture patterns in [Architecture](./architecture/overview.md)
 2. Write tests for new features
 3. Update API documentation when adding/changing endpoints
 4. Ensure 100% test passing before committing

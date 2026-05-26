@@ -80,7 +80,10 @@ plugins:
 nav:
   - Home: index.md
   - Blog: blog/index.md
-  - User Guide: USER_GUIDE.md
+  - User Guide:
+    - Getting Started: user-guide/getting-started.md
+    - Admin Features: user-guide/admin.md
+    - Help & Troubleshooting: user-guide/help.md
   - API Reference:
     - Overview & Auth: api/index.md
     - Chores: api/chores.md
@@ -91,9 +94,18 @@ nav:
     - Config & Health: api/config.md
     - Export: api/export.md
     - Import: api/import.md
-  - Architecture: ARCHITECTURE.md
-  - Developer Guide: DEVELOPER.md
-  - Deployment: DEPLOYMENT.md
+  - Architecture:
+    - Overview: architecture/overview.md
+    - Features: architecture/features.md
+    - Design: architecture/design.md
+  - Developer Guide:
+    - Setup & Workflow: developer/setup-and-workflow.md
+    - Reference: developer/reference.md
+    - Troubleshooting: developer/troubleshooting.md
+  - Deployment:
+    - Setup: deployment/setup.md
+    - Operations: deployment/operations.md
+    - Maintenance: deployment/maintenance.md
 
 extra:
   social:

@@ -156,6 +156,45 @@ Frontend tests: 205/205 passing ✓
 Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>
 ```
 
+## Upgrade Regression Test
+
+The upgrade regression test validates that data seeded against a previous release migrates correctly when the new backend starts against the same Postgres volume. It runs as a CI job on every PR to `main`.
+
+### How It Works
+
+1. **Pull previous release**: The job resolves the latest published GHCR tag dynamically at runtime.
+2. **Start old backend + Postgres**: Brings up `docker-compose.test-upgrade.yml` with the previous release image.
+3. **Seed comprehensive data**: Runs `backend/seed.py` against the old backend — creates People, Chores, Completions, Skips, Reassignments, and Amendments.
+4. **Start new backend**: Builds the backend image from the current branch and starts it against the same Postgres volume after seeding completes.
+5. **Validate**: Runs `backend/validate_upgrade.py` — API assertions (entity counts, assignees, points log, activity log, health) plus raw SQL FK/count integrity checks.
+6. **Result**: Non-zero exit on any failure fails the CI job.
+
+### Files
+
+| File | Purpose |
+|------|---------|
+| `docker-compose.test-upgrade.yml` | Upgrade test orchestration: Postgres + old backend + new backend services |
+| `backend/seed.py` | Comprehensive seeding: auth login + People, Chores, Completions, Skips, Reassignments, Amendments |
+| `backend/validate_upgrade.py` | Validation script: API assertions + raw SQL FK/count checks |
+| `.github/workflows/test.yml` | CI: `upgrade-regression` job added, triggered on PRs to `main` |
+
+### Running Locally
+
+```bash
+# Resolve the latest GHCR tag
+PREV_TAG=$(gh release list --limit 1 --json tagName -q '.[0].tagName')
+
+# Run the upgrade test
+PREV_TAG=$PREV_TAG docker compose -f docker-compose.test-upgrade.yml up \
+  --build \
+  --abort-on-container-exit \
+  --exit-code-from validate
+```
+
+### Failure Mode
+
+The job exits non-zero and fails CI. Check the `validate` service logs for specific assertion failures.
+
 ## Observability
 
 ### Metrics Endpoint

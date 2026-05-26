@@ -195,6 +195,41 @@ PREV_TAG=$PREV_TAG docker compose -f docker-compose.test-upgrade.yml up \
 
 The job exits non-zero and fails CI. Check the `validate` service logs for specific assertion failures.
 
+## Release Notes
+
+Release notes live in the MkDocs blog at `docs/blog/posts/`. Each release requires a corresponding blog post before the release PR can merge.
+
+### File Naming
+
+Release notes files must follow this naming convention:
+
+```
+docs/blog/posts/release-v{VERSION}.md
+```
+
+For example, for version `1.7.0`: `docs/blog/posts/release-v1.7.0.md`.
+
+### CI Enforcement
+
+The `release-notes` CI job in `.github/workflows/test.yml` runs on every pull request. It detects release PRs by title pattern `chore(main): release v*` and fails if the corresponding release notes file is missing. Non-release PRs skip the check automatically.
+
+### Creating Release Notes
+
+Create the blog post file before or alongside the release PR:
+
+```bash
+# For version v1.7.0
+cat > docs/blog/posts/release-v1.7.0.md << 'EOF'
+---
+date: 2026-01-01
+---
+
+# Release v1.7.0
+
+Summary of changes in this release.
+EOF
+```
+
 ## Observability
 
 ### Metrics Endpoint

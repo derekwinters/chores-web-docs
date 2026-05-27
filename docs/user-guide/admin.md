@@ -58,6 +58,16 @@ Admins can configure:
 - System name/title (optional)
 - Custom theme colors
 
+### Unsaved Changes
+
+Settings pages track unsaved changes:
+
+- The **Save** button is grayed out when no changes have been made in that section.
+- The **Save** button turns amber when there are unsaved changes.
+- Navigating away from a settings page with unsaved changes triggers a confirmation prompt. Dismiss it to stay and save; confirm to discard your changes and leave.
+
+This applies to all settings sections except Theme (which saves immediately on selection).
+
 ---
 
 ## Settings & Customization

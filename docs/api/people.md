@@ -8,7 +8,7 @@
   "name": "string",
   "username": "string",
   "is_admin": boolean,
-  "color": "#RRGGBB",
+  "color": "#RRGGBB",  // deprecated — will be removed in next major version
   "goal_7d": integer,
   "goal_30d": integer,
   "points": integer,
@@ -43,7 +43,7 @@ Update person settings. Admin or self only.
 **Request:**
 ```json
 {
-  "color": "#RRGGBB|null",
+  "color": "#RRGGBB|null",  // deprecated — will be removed in next major version
   "goal_7d": integer|null,
   "goal_30d": integer|null,
   "preferred_theme": "string|null"

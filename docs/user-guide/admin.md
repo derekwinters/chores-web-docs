@@ -16,7 +16,7 @@ Admins can create, modify, and remove users:
 **Modify a user:**
 1. Go to **Admin** → **Users**
 2. Find the user, click **Edit**
-3. Update name, color, goals, or theme preference
+3. Update name, goals, or theme preference
 4. Click **Save**
 
 **Delete a user:**
@@ -76,7 +76,6 @@ This applies to all settings sections except Theme (which saves immediately on s
 
 1. Click your **avatar** (top-right) → **Settings**
 2. Modify:
-   - **Color** – Your personal color on the dashboard
    - **7-Day Goal** – Weekly point target
    - **30-Day Goal** – Monthly point target
    - **Theme** – Light/dark mode or custom themes

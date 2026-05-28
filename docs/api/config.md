@@ -6,9 +6,25 @@ Get system configuration.
 **Response (200):**
 ```json
 {
-  "admin_theme": "string"
+  "title": "string",
+  "auth_enabled": true,
+  "timezone": "string",
+  "due_soon_days": 3,
+  "due_time_hour": 6,
+  "update_check_enabled": true,
+  "update_check_interval": 24
 }
 ```
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `title` | string | `"Family Chores"` | App display title |
+| `auth_enabled` | boolean | `true` | Whether authentication is required |
+| `timezone` | string | `"UTC"` | IANA timezone for scheduling (e.g. `"America/New_York"`) |
+| `due_soon_days` | integer | `3` | Days in advance to mark chores as due soon (1–365) |
+| `due_time_hour` | integer | `6` | Hour of day (0–23) when the scheduler marks overdue chores as due |
+| `update_check_enabled` | boolean | `true` | Whether automatic update checks are enabled |
+| `update_check_interval` | integer | `24` | Interval in hours between automatic update checks |
 
 ## PUT /config
 Update system configuration. Admin only.
@@ -16,11 +32,25 @@ Update system configuration. Admin only.
 **Request:**
 ```json
 {
-  "admin_theme": "string|null"
+  "title": "string|null",
+  "auth_enabled": "boolean|null",
+  "timezone": "string|null",
+  "due_soon_days": "integer|null",
+  "due_time_hour": "integer|null",
+  "update_check_enabled": "boolean|null",
+  "update_check_interval": "integer|null"
 }
 ```
 
-**Response (200):** Updated config
+All fields are optional. Only provided fields are updated.
+
+| Field | Validation | Notes |
+|-------|-----------|-------|
+| `due_soon_days` | 1–365 | Returns 422 if out of range |
+| `due_time_hour` | 0–23 | Returns 422 if out of range; reschedules the overdue-chore transition job immediately on save |
+| `timezone` | IANA string | Reschedules the overdue-chore transition job immediately on save |
+
+**Response (200):** Updated config (same shape as GET /config)
 
 ---
 

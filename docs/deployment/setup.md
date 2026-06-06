@@ -53,8 +53,15 @@ This starts:
 | `CORS_ORIGINS` | string | Yes | `http://localhost:3000` | `https://yourdomain.com` | Frontend origin for CORS validation |
 | `ENVIRONMENT` | string | Yes | `development` | `production` | Environment mode (affects logging, debug, etc.) |
 | `LOG_LEVEL` | string | No | `INFO` | `INFO` or `WARNING` | Logging level (DEBUG, INFO, WARNING, ERROR) |
-| `JWT_SECRET` | string | Yes (prod) | auto-generated | your-secret-key-here | Secret for JWT token signing |
+| `JWT_SECRET` | string | Yes | required, no default | `$(openssl rand -hex 32)` | Secret for JWT token signing — server fails to start if unset |
 | `JWT_EXPIRATION_DAYS` | int | No | `365` | `365` | JWT token expiration in days |
+
+**Generating a strong JWT secret:**
+```bash
+openssl rand -hex 32
+```
+
+> **Important:** Changing `JWT_SECRET` in production invalidates all existing sessions — all users must log in again. This is expected and acceptable when rotating the secret.
 
 #### Frontend Environment Variables
 

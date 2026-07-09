@@ -1,5 +1,5 @@
 mkdocs>=1.5.0
 mkdocs-material==9.5.50
-mkdocstrings[python]>=0.24.0
+mkdocstrings[python]>=1.0.4
 pymdown-extensions>=10.0
 mike

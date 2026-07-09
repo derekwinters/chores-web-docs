@@ -1,47 +1,40 @@
 # Documentation
 
-Complete documentation for the Chores application.
+User-facing documentation for the Chores application.
 
 ## Contents
 
 - **[User Guide](./user-guide/getting-started.md)** - How to use the app, features, FAQ, troubleshooting
 - **[API Documentation](./api/index.md)** - REST API endpoints, request/response formats, examples
-- **[Architecture](./architecture/overview.md)** - System design, data model, component diagrams
-- **[Developer Guide](./developer/setup-and-workflow.md)** - Setup, development workflow, testing
 - **[Deployment](./deployment/setup.md)** - Deployment instructions and configuration
+- **[Blog](./blog/index.md)** - Release announcements
 
 ## Quick Start
 
 ### For Users
 
-Visit the application in your browser. See deployment documentation for setup.
+Visit the application in your browser. See [deployment documentation](./deployment/setup.md) for setup.
 
 ### For Developers
 
-1. Read [Developer Guide](./developer/setup-and-workflow.md) for local setup
-2. Review [Architecture](./architecture/overview.md) to understand system design
-3. Reference [API Documentation](./api/index.md) when building features
+Development happens across separate repositories; each carries its own
+developer documentation:
 
-## Project Structure
+| Repository | Purpose |
+|---|---|
+| [chores-web-backend](https://github.com/derekwinters/chores-web-backend) | FastAPI REST API (architecture docs, ADRs, developer guide) |
+| [chores-web-frontend](https://github.com/derekwinters/chores-web-frontend) | React SPA |
+| [chores-web-android](https://github.com/derekwinters/chores-web-android) | Native Android client |
+| [chores-web-ha-plugin](https://github.com/derekwinters/chores-web-ha-plugin) | Home Assistant integration |
+| [chores-web-design-tokens](https://github.com/derekwinters/chores-web-design-tokens) | Shared design tokens |
+| [chores-web-actions](https://github.com/derekwinters/chores-web-actions) | Shared CI actions and workflows |
 
-```
-chores-web/
-├── frontend/              # React SPA
-│   ├── src/
-│   │   ├── pages/        # Route pages
-│   │   ├── components/   # Reusable components
-│   │   ├── api/          # API client
-│   │   └── utils/        # Utilities
-│   └── package.json
-├── backend/               # FastAPI REST API
-│   ├── app/
-│   │   ├── routers/      # API route handlers
-│   │   ├── services/     # Business logic
-│   │   ├── models.py     # Database models
-│   │   └── schemas.py    # Data schemas
-│   └── requirements.txt
-└── docs/                 # This documentation
-```
+## The API Contract
+
+This repository owns the API contract: the golden OpenAPI snapshot at
+`docs/api/openapi.json` and the `API_VERSION` file at the repo root.
+Backend changes are checked against this contract in CI — breaking changes
+require a pull request here first. See [API Documentation](./api/index.md).
 
 ## Key Features
 
@@ -53,36 +46,11 @@ chores-web/
 - **Customizable Themes** - User-specific theme preferences
 - **Multi-user Support** - Admin and regular user roles
 
-## Technology Stack
-
-**Frontend:**
-- React 18
-- React Query (Tanstack Query)
-- Vitest + React Testing Library
-- Vite
-
-**Backend:**
-- FastAPI
-- SQLAlchemy ORM
-- SQLite
-- APScheduler
-- Pydantic
-
-**DevOps:**
-- Docker & Docker Compose
-- GitHub Actions (future)
-
 ## API Base URL
 
-Swagger UI: `http://localhost:8000/docs`
-
-## Contributing
-
-1. Follow the architecture patterns in [Architecture](./architecture/overview.md)
-2. Write tests for new features
-3. Update API documentation when adding/changing endpoints
-4. Ensure 100% test passing before committing
+Swagger UI on a running instance: `http://localhost:8000/docs`
 
 ## Support
 
-For questions or issues, refer to the relevant documentation or examine the codebase.
+For questions or issues, refer to the relevant documentation or open an
+issue in the matching repository.

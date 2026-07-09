@@ -1,7 +1,7 @@
 site_name: Chores Documentation
 site_description: REST API for managing household chores and tracking
-repo_url: https://github.com/derekwinters/chores-web
-repo_name: chores-web
+repo_url: https://github.com/derekwinters/chores-web-docs
+repo_name: chores-web-docs
 edit_uri: edit/main/docs/
 
 theme:
@@ -46,7 +46,7 @@ markdown_extensions:
   - pymdownx.magiclink:
       provider: github
       user: derekwinters
-      repo: chores-web
+      repo: chores-web-docs
   - pymdownx.mark
   - pymdownx.superfences:
       custom_fences:
@@ -84,23 +84,18 @@ nav:
     - Getting Started: user-guide/getting-started.md
     - Admin Features: user-guide/admin.md
     - Help & Troubleshooting: user-guide/help.md
-  - Architecture:
-    - Overview: architecture/overview.md
-    - Features: architecture/features.md
-    - Design: architecture/design.md
-  - Developer Guide:
-    - Setup & Workflow: developer/setup-and-workflow.md
-    - Reference: developer/reference.md
-    - Troubleshooting: developer/troubleshooting.md
+  - API Reference: api/index.md
   - Deployment:
     - Setup: deployment/setup.md
     - Operations: deployment/operations.md
     - Maintenance: deployment/maintenance.md
 
 extra:
+  version:
+    provider: mike
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/derekwinters/chores-web
+      link: https://github.com/derekwinters/chores-web-docs
     - icon: fontawesome/brands/docker
       link: https://hub.docker.com
 

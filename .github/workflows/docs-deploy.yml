@@ -1,0 +1,30 @@
+name: Deploy Docs
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-depth: 0
+      - uses: derekwinters/chores-web-actions/actions/setup-python@19729c4d6ee3366dc32f4bd8946cb8ac7f6b05e5
+        with:
+          requirements-path: docs/requirements.txt
+      - name: Install dependencies
+        run: pip install -r docs/requirements.txt
+      - name: Configure git for gh-pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Deploy versioned docs with mike
+        run: |
+          VERSION="v$(tr -d '[:space:]' < API_VERSION)"
+          mike deploy --push --update-aliases "$VERSION" latest
+          mike set-default --push latest

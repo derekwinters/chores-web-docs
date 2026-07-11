@@ -52,11 +52,9 @@ services:
     depends_on:
       backend:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:80/ || exit 1"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
+    # No container healthcheck: nginx:alpine doesn't reliably ship wget/curl.
+    # Nginx itself starts near-instantly, so an external HTTP check (see the
+    # docs CI smoke test) is a more faithful signal than a shelled-out probe.
 
 volumes:
   chores-postgres:

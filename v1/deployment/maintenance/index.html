@@ -1337,18 +1337,19 @@ docker-compose<span class="w"> </span><span class="nb">exec</span><span class="w
 <span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) FROM pg_stat_activity;&quot;</span>
 </code></pre></div></p>
 <h3 id="cors-errors">CORS Errors<a class="headerlink" href="#cors-errors" title="Permanent link">&para;</a></h3>
+<p>The bundled stack should never produce CORS errors: the frontend calls
+<code>/api/v1</code> on its own origin and Nginx proxies those requests to the backend,
+so no cross-origin request occurs. If you see CORS errors:</p>
 <ol>
-<li>Check frontend <code>VITE_API_URL</code> points to backend (should match <code>CORS_ORIGINS</code>)</li>
-<li>Verify backend CORS middleware allows frontend origin in docker-compose.yml</li>
-<li>Check browser console Network tab for actual error (look at Preflight OPTIONS request)</li>
-<li>Production: ensure CORS_ORIGINS uses HTTPS if frontend is HTTPS</li>
+<li>Check whether the frontend was built with a custom <code>VITE_API_URL</code>
+   pointing at a different origin — the default <code>/api/v1</code> stays same-origin</li>
+<li>Check browser console Network tab for the actual error (look at the
+   preflight OPTIONS request)</li>
+<li>If you intentionally serve the API from a different origin, the allowed
+   origins are configured in backend code (<code>allow_origins</code> in
+   <code>app/main.py</code>), not via environment variables — see
+   <a href="../operations/#cors">Operations → CORS</a></li>
 </ol>
-<p><strong>Fix:</strong>
-<div class="highlight"><pre><span></span><code><span class="c1"># docker-compose.yml</span>
-<span class="nt">backend</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">CORS_ORIGINS</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://yourdomain.com&quot;</span><span class="w">  </span><span class="c1"># Must match frontend origin exactly</span>
-</code></pre></div></p>
 <h3 id="authentication-issues">Authentication Issues<a class="headerlink" href="#authentication-issues" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>Token not present:</strong></li>

@@ -700,9 +700,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#backup-data" class="md-nav__link">
+  <a href="#restore-database" class="md-nav__link">
     <span class="md-ellipsis">
-      Backup Data
+      Restore Database
     </span>
   </a>
   
@@ -889,9 +889,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#backup-data" class="md-nav__link">
+  <a href="#restore-database" class="md-nav__link">
     <span class="md-ellipsis">
-      Backup Data
+      Restore Database
     </span>
   </a>
   
@@ -1013,18 +1013,18 @@
 </code></pre></div>
 <h2 id="backup-recovery">Backup &amp; Recovery<a class="headerlink" href="#backup-recovery" title="Permanent link">&para;</a></h2>
 <h3 id="backup-database">Backup Database<a class="headerlink" href="#backup-database" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Backup SQLite</span>
-docker-compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>backend<span class="w"> </span>cp<span class="w"> </span>app.db<span class="w"> </span>app.db.backup
+<div class="highlight"><pre><span></span><code><span class="c1"># Dump the PostgreSQL database to a local file</span>
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>db<span class="w"> </span>pg_dump<span class="w"> </span>-U<span class="w"> </span>chores<span class="w"> </span>chores<span class="w"> </span>&gt;<span class="w"> </span>chores-backup.sql
 
-<span class="c1"># Restore from backup</span>
-docker-compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>backend<span class="w"> </span>cp<span class="w"> </span>app.db.backup<span class="w"> </span>app.db
+<span class="c1"># Compressed backup</span>
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>db<span class="w"> </span>pg_dump<span class="w"> </span>-U<span class="w"> </span>chores<span class="w"> </span>-Fc<span class="w"> </span>chores<span class="w"> </span>&gt;<span class="w"> </span>chores-backup.dump
 </code></pre></div>
-<h3 id="backup-data">Backup Data<a class="headerlink" href="#backup-data" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Create backup archive</span>
-docker-compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>backend<span class="w"> </span>tar<span class="w"> </span>czf<span class="w"> </span>app.db.tar.gz<span class="w"> </span>app.db
+<h3 id="restore-database">Restore Database<a class="headerlink" href="#restore-database" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Restore from a plain SQL dump</span>
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>db<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>chores<span class="w"> </span>chores<span class="w"> </span>&lt;<span class="w"> </span>chores-backup.sql
 
-<span class="c1"># Download backup</span>
-docker<span class="w"> </span>cp<span class="w"> </span>&lt;container&gt;:/app/app.db.tar.gz<span class="w"> </span>./backup.tar.gz
+<span class="c1"># Restore from a compressed dump</span>
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>db<span class="w"> </span>pg_restore<span class="w"> </span>-U<span class="w"> </span>chores<span class="w"> </span>-d<span class="w"> </span>chores<span class="w"> </span>--clean<span class="w"> </span>&lt;<span class="w"> </span>chores-backup.dump
 </code></pre></div>
 <h2 id="monitoring">Monitoring<a class="headerlink" href="#monitoring" title="Permanent link">&para;</a></h2>
 <h3 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h3>

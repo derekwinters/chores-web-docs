@@ -924,100 +924,155 @@
 <li>(Optional) Domain name and SSL certificate for production</li>
 </ul>
 <h2 id="docker-deployment">Docker Deployment<a class="headerlink" href="#docker-deployment" title="Permanent link">&para;</a></h2>
-<h3 id="development-deployment">Development Deployment<a class="headerlink" href="#development-deployment" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>docker-compose<span class="w"> </span>up
+<p>The deployment stack is defined in <a href="../docker-compose.yml"><code>docker-compose.yml</code></a>,
+which lives in this documentation repository at
+<a href="https://github.com/derekwinters/chores-web-docs/blob/main/docs/deployment/docker-compose.yml"><code>docs/deployment/docker-compose.yml</code></a>
+and ships with this site — download it from the link above. The full file is
+embedded below, and it is smoke-tested in CI on every docs change: the stack
+is booted from the published images and the health endpoints are asserted, so
+the file you see here is known to work.</p>
+<p>It runs three services from published images:</p>
+<ul>
+<li><strong><code>frontend</code></strong> — <code>ghcr.io/derekwinters/chores-web-frontend</code> (Nginx serving
+  the built app on port 3000, reverse-proxying <code>/api/</code> to the backend)</li>
+<li><strong><code>backend</code></strong> — <code>ghcr.io/derekwinters/chores-web-backend</code> (FastAPI on
+  port 8000)</li>
+<li><strong><code>db</code></strong> — <code>postgres:16-alpine</code> with a named volume for data</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># Chores deployment stack.</span>
+<span class="c1">#</span>
+<span class="c1"># This file is the canonical deployable compose stack for chores-web. It is</span>
+<span class="c1"># embedded verbatim in the Deployment Setup guide and smoke-tested in CI on</span>
+<span class="c1"># every docs PR (the stack is booted from the published images and health</span>
+<span class="c1"># endpoints are asserted), so it is kept accurate by the same gate that</span>
+<span class="c1"># builds the docs.</span>
+<span class="c1">#</span>
+<span class="c1"># Quick start:</span>
+<span class="c1">#   echo &quot;JWT_SECRET=$(openssl rand -hex 32)&quot; &gt; .env</span>
+<span class="c1">#   docker compose up -d</span>
+<span class="c1">#</span>
+<span class="c1"># Images default to :latest. For production, pin both to the same released</span>
+<span class="c1"># version tag (e.g. 2.2.0) and upgrade deliberately.</span>
+
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:16-alpine</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">POSTGRES_DB</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chores</span>
+<span class="w">      </span><span class="nt">POSTGRES_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chores</span>
+<span class="w">      </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chores</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chores-postgres:/var/lib/postgresql/data</span>
+<span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD-SHELL&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;pg_isready</span><span class="nv"> </span><span class="s">-U</span><span class="nv"> </span><span class="s">chores&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
+<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
+<span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+
+<span class="w">  </span><span class="nt">backend</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/derekwinters/chores-web-backend:latest</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgresql+asyncpg://chores:chores@db/chores</span>
+<span class="w">      </span><span class="nt">JWT_SECRET</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${JWT_SECRET:?Set</span><span class="nv"> </span><span class="s">JWT_SECRET</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">.env</span><span class="nv"> </span><span class="s">—</span><span class="nv"> </span><span class="s">generate</span><span class="nv"> </span><span class="s">one</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">&#39;openssl</span><span class="nv"> </span><span class="s">rand</span><span class="nv"> </span><span class="s">-hex</span><span class="nv"> </span><span class="s">32&#39;}&quot;</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8000:8000&quot;</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service_healthy</span>
+<span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD-SHELL&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;python</span><span class="nv"> </span><span class="s">-c</span><span class="nv"> </span><span class="s">\&quot;import</span><span class="nv"> </span><span class="s">urllib.request;</span><span class="nv"> </span><span class="s">urllib.request.urlopen(&#39;http://localhost:8000/health&#39;)\&quot;</span><span class="nv"> </span><span class="s">||</span><span class="nv"> </span><span class="s">exit</span><span class="nv"> </span><span class="s">1&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
+<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
+<span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+<span class="w">      </span><span class="nt">start_period</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10s</span>
+
+<span class="w">  </span><span class="nt">frontend</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/derekwinters/chores-web-frontend:latest</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;3000:80&quot;</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">backend</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service_healthy</span>
+<span class="w">    </span><span class="c1"># No container healthcheck: nginx:alpine doesn&#39;t reliably ship wget/curl.</span>
+<span class="w">    </span><span class="c1"># Nginx itself starts near-instantly, so an external HTTP check (see the</span>
+<span class="w">    </span><span class="c1"># docs CI smoke test) is a more faithful signal than a shelled-out probe.</span>
+
+<span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">chores-postgres</span><span class="p">:</span>
 </code></pre></div>
-<p>This starts:
-- <strong>Frontend:</strong> <a href="http://localhost:3000">http://localhost:3000</a> (Nginx reverse proxy)
-- <strong>Backend:</strong> <a href="http://localhost:8000">http://localhost:8000</a>
-- <strong>API Docs:</strong> <a href="http://localhost:8000/docs">http://localhost:8000/docs</a></p>
+<h3 id="development-deployment">Development Deployment<a class="headerlink" href="#development-deployment" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Download the compose file (or clone this repo and cd docs/deployment)</span>
+curl<span class="w"> </span>-fsSLO<span class="w"> </span>https://raw.githubusercontent.com/derekwinters/chores-web-docs/main/docs/deployment/docker-compose.yml
+
+<span class="c1"># 2. Generate the required JWT secret</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;JWT_SECRET=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-hex<span class="w"> </span><span class="m">32</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.env
+
+<span class="c1"># 3. Start the stack</span>
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>This starts:</p>
+<ul>
+<li><strong>Frontend:</strong> <a href="http://localhost:3000">http://localhost:3000</a> (Nginx reverse proxy)</li>
+<li><strong>Backend:</strong> <a href="http://localhost:8000">http://localhost:8000</a></li>
+<li><strong>API Docs:</strong> <a href="http://localhost:8000/docs">http://localhost:8000/docs</a></li>
+</ul>
 <h3 id="production-deployment">Production Deployment<a class="headerlink" href="#production-deployment" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Update docker-compose.yml</strong> for production:</li>
-<li>Set <code>ENVIRONMENT=production</code></li>
-<li>Change frontend to serve from <code>/api</code> proxy</li>
-<li>Enable HTTPS redirect</li>
 <li>
-<p>Set proper CORS origins</p>
+<p><strong>Pin image versions</strong> — change both <code>image:</code> tags from <code>latest</code> to the
+   same released version (e.g. <code>ghcr.io/derekwinters/chores-web-backend:2.2.0</code>)
+   so upgrades are deliberate. Releases are listed on each repository's
+   GitHub Releases page.</p>
 </li>
 <li>
-<p><strong>Build images:</strong>
-   <div class="highlight"><pre><span></span><code>docker-compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.yml<span class="w"> </span>build
-</code></pre></div></p>
+<p><strong>Set a strong <code>JWT_SECRET</code></strong> in <code>.env</code> (see
+   <a href="#environment-variables-reference">Environment Variables</a> below).</p>
 </li>
 <li>
-<p><strong>Start services:</strong>
-   <div class="highlight"><pre><span></span><code>docker-compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.yml<span class="w"> </span>up<span class="w"> </span>-d
-</code></pre></div></p>
+<p><strong>Use real database credentials</strong> — either change the <code>db</code> service's
+   <code>POSTGRES_*</code> values and the matching <code>DATABASE_URL</code>, or point
+   <code>DATABASE_URL</code> at an external PostgreSQL instance and remove the <code>db</code>
+   service.</p>
 </li>
 <li>
-<p><strong>Verify health:</strong>
-   <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:8000/health
+<p><strong>Terminate HTTPS in front of the stack</strong> — put a TLS-terminating reverse
+   proxy (or the nginx SSL configuration from
+   <a href="../operations/#https">Operations → Security</a>) in front of the frontend
+   port.</p>
+</li>
+<li>
+<p><strong>Start and verify:</strong>
+   <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+curl<span class="w"> </span>http://localhost:8000/health
 </code></pre></div></p>
 </li>
 </ol>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <h3 id="environment-variables-reference">Environment Variables Reference<a class="headerlink" href="#environment-variables-reference" title="Permanent link">&para;</a></h3>
 <h4 id="backend-environment-variables">Backend Environment Variables<a class="headerlink" href="#backend-environment-variables" title="Permanent link">&para;</a></h4>
+<p>The backend reads exactly two settings (from the environment or a <code>.env</code>
+file):</p>
 <table>
 <thead>
 <tr>
 <th>Variable</th>
-<th>Type</th>
 <th>Required</th>
-<th>Development</th>
-<th>Production</th>
+<th>Default</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>DATABASE_URL</code></td>
-<td>string</td>
-<td>Yes</td>
+<td>No</td>
 <td><code>postgresql+asyncpg://chores:chores@db/chores</code></td>
-<td><code>postgresql+asyncpg://user:pass@db.example.com/chores</code></td>
 <td>PostgreSQL async connection string</td>
 </tr>
 <tr>
-<td><code>CORS_ORIGINS</code></td>
-<td>string</td>
-<td>Yes</td>
-<td><code>http://localhost:3000</code></td>
-<td><code>https://yourdomain.com</code></td>
-<td>Frontend origin for CORS validation</td>
-</tr>
-<tr>
-<td><code>ENVIRONMENT</code></td>
-<td>string</td>
-<td>Yes</td>
-<td><code>development</code></td>
-<td><code>production</code></td>
-<td>Environment mode (affects logging, debug, etc.)</td>
-</tr>
-<tr>
-<td><code>LOG_LEVEL</code></td>
-<td>string</td>
-<td>No</td>
-<td><code>INFO</code></td>
-<td><code>INFO</code> or <code>WARNING</code></td>
-<td>Logging level (DEBUG, INFO, WARNING, ERROR)</td>
-</tr>
-<tr>
 <td><code>JWT_SECRET</code></td>
-<td>string</td>
 <td>Yes</td>
-<td>required, no default</td>
-<td><code>$(openssl rand -hex 32)</code></td>
-<td>Secret for JWT token signing — server fails to start if unset</td>
-</tr>
-<tr>
-<td><code>JWT_EXPIRATION_DAYS</code></td>
-<td>int</td>
-<td>No</td>
-<td><code>365</code></td>
-<td><code>365</code></td>
-<td>JWT token expiration in days</td>
+<td>— (server fails to start if unset)</td>
+<td>Secret for JWT token signing</td>
 </tr>
 </tbody>
 </table>
@@ -1025,28 +1080,33 @@
 <div class="highlight"><pre><span></span><code>openssl<span class="w"> </span>rand<span class="w"> </span>-hex<span class="w"> </span><span class="m">32</span>
 </code></pre></div></p>
 <blockquote>
-<p><strong>Important:</strong> Changing <code>JWT_SECRET</code> in production invalidates all existing sessions — all users must log in again. This is expected and acceptable when rotating the secret.</p>
+<p><strong>Important:</strong> Changing <code>JWT_SECRET</code> in production invalidates all existing
+sessions — all users must log in again. This is expected and acceptable
+when rotating the secret.</p>
 </blockquote>
+<p>CORS is not configured via environment variables — the backend currently
+allows all origins, and the bundled stack avoids cross-origin requests
+entirely because Nginx proxies <code>/api/</code> to the backend on the same origin. To
+restrict origins, see <a href="../operations/#cors">Operations → CORS</a>.</p>
 <h4 id="frontend-environment-variables">Frontend Environment Variables<a class="headerlink" href="#frontend-environment-variables" title="Permanent link">&para;</a></h4>
+<p>The published frontend image needs no environment variables. API requests go
+to <code>/api/v1</code> on the frontend's own origin, and Nginx proxies them to the
+backend service.</p>
 <table>
 <thead>
 <tr>
 <th>Variable</th>
-<th>Type</th>
 <th>Required</th>
-<th>Development</th>
-<th>Production</th>
+<th>Default</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>VITE_API_URL</code></td>
-<td>string</td>
-<td>Yes</td>
-<td><code>http://backend:8000/api</code></td>
-<td><code>https://yourdomain.com/api</code></td>
-<td>Backend API base URL</td>
+<td>No</td>
+<td><code>/api/v1</code></td>
+<td>Build-time API base URL. Only relevant when building the frontend yourself; baked into the bundle at <code>npm run build</code>, not read at runtime.</td>
 </tr>
 </tbody>
 </table>
@@ -1055,20 +1115,18 @@
 <p>Connection format:
 <div class="highlight"><pre><span></span><code>postgresql+asyncpg://username:password@host:5432/database_name
 </code></pre></div></p>
-<p><strong>In docker-compose (development):</strong>
-<div class="highlight"><pre><span></span><code><span class="nt">db</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:16-alpine</span>
-<span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">POSTGRES_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chores</span>
-<span class="w">    </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chores</span>
-<span class="w">    </span><span class="nt">POSTGRES_DB</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chores</span>
-</code></pre></div></p>
-<p><strong>In production:</strong>
-- Use external PostgreSQL instance
-- Update DATABASE_URL with production credentials
-- Ensure database user has CREATE/ALTER privileges for schema initialization
-- Backend auto-creates tables on startup via SQLAlchemy
-- No manual migrations needed (schema-first approach)</p>
+<p>The bundled <code>db</code> service (see the compose file above) runs
+<code>postgres:16-alpine</code> with a named volume, so data survives container
+recreation.</p>
+<p><strong>In production:</strong></p>
+<ul>
+<li>Use an external PostgreSQL instance, or at minimum change the bundled
+  service's credentials</li>
+<li>Update DATABASE_URL with production credentials</li>
+<li>Ensure database user has CREATE/ALTER privileges for schema initialization</li>
+<li>Backend auto-creates tables on startup via SQLAlchemy</li>
+<li>No manual migrations needed (schema-first approach)</li>
+</ul>
 <p><strong>Schema Overview:</strong></p>
 <ul>
 <li><strong>Person</strong> – Users (id, name, username, password_hash, is_admin, color, goals, points)</li>

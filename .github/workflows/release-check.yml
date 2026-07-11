@@ -1,0 +1,144 @@
+name: Release Check
+
+# Keeps the pinned "# vX.Y.Z" comments in docs/deployment/docker-compose.yml
+# honest against the actual latest GitHub releases of the frontend and
+# backend repos. Runs weekly (and on demand); opens a PR only when a pin is
+# stale. If either GitHub API call fails, the job fails loudly rather than
+# reporting a false "up to date".
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # every Monday at 06:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-check:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      COMPOSE_FILE: docs/deployment/docker-compose.yml
+      RELEASE_BRANCH: release-check/update-pins
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-depth: 0
+
+      - name: Fetch latest upstream release versions
+        id: latest
+        run: |
+          set -euo pipefail
+
+          fetch_latest_version() {
+            local repo="$1"
+            local response status body tag
+
+            # A curl transport failure (DNS, network, etc.) returns non-zero
+            # here and, under `set -e`, aborts the job immediately.
+            response="$(curl -sS -w '\n%{http_code}' \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${repo}/releases/latest")"
+
+            status="$(printf '%s' "$response" | tail -n1)"
+            body="$(printf '%s' "$response" | sed '$d')"
+
+            if [ "$status" != "200" ]; then
+              echo "::error::GitHub API request for ${repo}/releases/latest failed with HTTP ${status}" >&2
+              printf '%s\n' "$body" >&2
+              exit 1
+            fi
+
+            tag="$(printf '%s' "$body" | jq -r '.tag_name // empty')"
+            if [ -z "$tag" ]; then
+              echo "::error::No tag_name found in releases/latest response for ${repo}" >&2
+              printf '%s\n' "$body" >&2
+              exit 1
+            fi
+
+            printf '%s' "${tag#v}"
+          }
+
+          frontend_version="$(fetch_latest_version derekwinters/chores-web-frontend)"
+          backend_version="$(fetch_latest_version derekwinters/chores-web-backend)"
+
+          echo "Latest frontend release: ${frontend_version}"
+          echo "Latest backend release: ${backend_version}"
+
+          echo "frontend=${frontend_version}" >> "$GITHUB_OUTPUT"
+          echo "backend=${backend_version}" >> "$GITHUB_OUTPUT"
+
+      - name: Compare against pinned versions
+        id: compare
+        run: |
+          set -euo pipefail
+
+          current_frontend="$(grep -oP 'chores-web-frontend:latest\s*#\s*v\K[0-9][0-9A-Za-z.+-]*' "$COMPOSE_FILE" || true)"
+          current_backend="$(grep -oP 'chores-web-backend:latest\s*#\s*v\K[0-9][0-9A-Za-z.+-]*' "$COMPOSE_FILE" || true)"
+
+          echo "Currently pinned frontend: ${current_frontend:-<none>}"
+          echo "Currently pinned backend: ${current_backend:-<none>}"
+
+          echo "current_frontend=${current_frontend}" >> "$GITHUB_OUTPUT"
+          echo "current_backend=${current_backend}" >> "$GITHUB_OUTPUT"
+
+          changed=false
+          if [ "${current_frontend}" != "${{ steps.latest.outputs.frontend }}" ]; then
+            changed=true
+          fi
+          if [ "${current_backend}" != "${{ steps.latest.outputs.backend }}" ]; then
+            changed=true
+          fi
+
+          echo "changed=${changed}" >> "$GITHUB_OUTPUT"
+
+      - name: Update pinned version comments
+        if: steps.compare.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+
+          sed -i -E "s|(chores-web-frontend:latest[[:space:]]*#[[:space:]]*v)[0-9A-Za-z.+-]+|\1${{ steps.latest.outputs.frontend }}|" "$COMPOSE_FILE"
+          sed -i -E "s|(chores-web-backend:latest[[:space:]]*#[[:space:]]*v)[0-9A-Za-z.+-]+|\1${{ steps.latest.outputs.backend }}|" "$COMPOSE_FILE"
+
+          git diff -- "$COMPOSE_FILE"
+
+      - name: Open pull request with updated pins
+        if: steps.compare.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Start the update branch fresh every run. Deleting the remote
+          # branch (if left over from a prior run) also auto-closes any PR
+          # still open against it, so we never end up with duplicate PRs.
+          git push origin --delete "$RELEASE_BRANCH" 2>/dev/null || true
+
+          git checkout -b "$RELEASE_BRANCH"
+          git add "$COMPOSE_FILE"
+          git commit -m "chore: update deployment image version pins"
+          git push --force origin "$RELEASE_BRANCH"
+
+          gh pr create \
+            --title "chore: update deployment image version pins" \
+            --base main \
+            --head "$RELEASE_BRANCH" \
+            --body "$(cat <<EOF
+          Upstream releases moved; this updates the pinned version comments
+          in \`docs/deployment/docker-compose.yml\` to match the current
+          latest GitHub releases.
+
+          | Image | Old | New |
+          | --- | --- | --- |
+          | frontend | ${{ steps.compare.outputs.current_frontend }} | ${{ steps.latest.outputs.frontend }} |
+          | backend | ${{ steps.compare.outputs.current_backend }} | ${{ steps.latest.outputs.backend }} |
+
+          The pinned comments are informational only — both images still
+          default to \`:latest\` in this file. Opened automatically by the
+          [Release Check workflow](.github/workflows/release-check.yml).
+          EOF
+          )"

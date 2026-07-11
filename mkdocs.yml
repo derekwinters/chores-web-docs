@@ -89,6 +89,7 @@ nav:
   - API Reference: api/index.md
   - Deployment:
     - Setup: deployment/setup.md
+    - HTTPS / TLS: deployment/https.md
     - Operations: deployment/operations.md
     - Maintenance: deployment/maintenance.md
 

@@ -1,0 +1,12 @@
+# Caddyfile for the docker-compose.https.yml overlay.
+#
+# Caddy requests and renews the Let's Encrypt certificate for {$DOMAIN}
+# automatically — no certbot, no cron job, no manual renewal step. It also
+# redirects plain HTTP to HTTPS by default.
+{$DOMAIN} {
+	reverse_proxy frontend:80 {
+		header_up X-Forwarded-Proto {scheme}
+		header_up X-Forwarded-For {remote_host}
+		header_up Host {host}
+	}
+}

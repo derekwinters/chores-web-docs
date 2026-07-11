@@ -1,0 +1,41 @@
+# HTTPS overlay for the base stack (docker-compose.yml).
+#
+# Adds a Caddy reverse proxy that terminates TLS in front of the frontend
+# container and gets its certificate from Let's Encrypt automatically. This
+# file only adds the `caddy` service — it does not repeat the
+# `db`/`backend`/`frontend` services themselves.
+#
+# The frontend's own "3000:80" port mapping from the base file is still
+# published alongside Caddy's 80/443. That's harmless for a host that's
+# otherwise firewalled, but in production you likely want the reverse proxy
+# to be the only public entrypoint — either firewall off 3000 or drop that
+# port mapping from your own copy of docker-compose.yml.
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.https.yml up -d
+#
+# Requires:
+#   - A domain's DNS A/AAAA record pointing at this host
+#   - Ports 80 and 443 reachable from the internet (80 is used for the
+#     ACME HTTP-01 challenge and to redirect to HTTPS)
+#   - DOMAIN set in .env, e.g. DOMAIN=chores.example.com
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: "${DOMAIN:?Set DOMAIN in .env, e.g. DOMAIN=chores.example.com}"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - chores-caddy-data:/data
+      - chores-caddy-config:/config
+    depends_on:
+      frontend:
+        condition: service_started
+
+volumes:
+  chores-caddy-data:
+  chores-caddy-config:

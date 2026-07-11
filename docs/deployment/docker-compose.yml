@@ -1,0 +1,60 @@
+# Chores deployment stack.
+#
+# This file is the canonical deployable compose stack for chores-web. It is
+# embedded verbatim in the Deployment Setup guide and smoke-tested in CI on
+# every docs PR (the stack is booted from the published images and health
+# endpoints are asserted), so it is kept accurate by the same gate that
+# builds the docs.
+#
+# Quick start:
+#   echo "JWT_SECRET=$(openssl rand -hex 32)" > .env
+#   docker compose up -d
+#
+# Images default to :latest. For production, pin both to the same released
+# version tag (e.g. 2.2.0) and upgrade deliberately.
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: chores
+      POSTGRES_USER: chores
+      POSTGRES_PASSWORD: chores
+    volumes:
+      - chores-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U chores"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    image: ghcr.io/derekwinters/chores-web-backend:latest
+    environment:
+      DATABASE_URL: postgresql+asyncpg://chores:chores@db/chores
+      JWT_SECRET: "${JWT_SECRET:?Set JWT_SECRET in .env — generate one with 'openssl rand -hex 32'}"
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\" || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  frontend:
+    image: ghcr.io/derekwinters/chores-web-frontend:latest
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    # No container healthcheck: nginx:alpine doesn't reliably ship wget/curl.
+    # Nginx itself starts near-instantly, so an external HTTP check (see the
+    # docs CI smoke test) is a more faithful signal than a shelled-out probe.
+
+volumes:
+  chores-postgres:

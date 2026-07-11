@@ -48,6 +48,8 @@ markdown_extensions:
       user: derekwinters
       repo: chores-web-docs
   - pymdownx.mark
+  - pymdownx.snippets:
+      check_paths: true
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid

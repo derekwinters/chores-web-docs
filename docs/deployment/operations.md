@@ -48,21 +48,21 @@ app.add_middleware(
 ### Backup Database
 
 ```bash
-# Backup SQLite
-docker-compose exec backend cp app.db app.db.backup
+# Dump the PostgreSQL database to a local file
+docker compose exec db pg_dump -U chores chores > chores-backup.sql
 
-# Restore from backup
-docker-compose exec backend cp app.db.backup app.db
+# Compressed backup
+docker compose exec db pg_dump -U chores -Fc chores > chores-backup.dump
 ```
 
-### Backup Data
+### Restore Database
 
 ```bash
-# Create backup archive
-docker-compose exec backend tar czf app.db.tar.gz app.db
+# Restore from a plain SQL dump
+docker compose exec -T db psql -U chores chores < chores-backup.sql
 
-# Download backup
-docker cp <container>:/app/app.db.tar.gz ./backup.tar.gz
+# Restore from a compressed dump
+docker compose exec -T db pg_restore -U chores -d chores --clean < chores-backup.dump
 ```
 
 ## Monitoring

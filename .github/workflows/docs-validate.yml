@@ -19,3 +19,27 @@ jobs:
         run: pip install -r docs/requirements.txt
       - name: Build documentation
         run: mkdocs build --strict
+
+  # The deployment guide embeds docs/deployment/docker-compose.yml verbatim.
+  # Boot that exact stack from the published images and assert the health
+  # endpoints, so the documented deployment can never silently rot.
+  compose-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - name: Boot the documented deployment stack
+        working-directory: docs/deployment
+        env:
+          JWT_SECRET: docs-smoke-test-secret
+        run: docker compose up -d --wait --wait-timeout 180
+      - name: Assert health endpoints
+        run: |
+          curl -fsS http://localhost:8000/health
+          curl -fsS -o /dev/null http://localhost:3000/
+          curl -fsS http://localhost:3000/api/health
+      - name: Collect logs on failure
+        if: failure()
+        working-directory: docs/deployment
+        run: |
+          docker compose ps -a
+          docker compose logs

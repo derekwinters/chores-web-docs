@@ -57,18 +57,18 @@ docker-compose exec db psql -U chores -d chores \
 
 ### CORS Errors
 
-1. Check frontend `VITE_API_URL` points to backend (should match `CORS_ORIGINS`)
-2. Verify backend CORS middleware allows frontend origin in docker-compose.yml
-3. Check browser console Network tab for actual error (look at Preflight OPTIONS request)
-4. Production: ensure CORS_ORIGINS uses HTTPS if frontend is HTTPS
+The bundled stack should never produce CORS errors: the frontend calls
+`/api/v1` on its own origin and Nginx proxies those requests to the backend,
+so no cross-origin request occurs. If you see CORS errors:
 
-**Fix:**
-```yaml
-# docker-compose.yml
-backend:
-  environment:
-    CORS_ORIGINS: "https://yourdomain.com"  # Must match frontend origin exactly
-```
+1. Check whether the frontend was built with a custom `VITE_API_URL`
+   pointing at a different origin — the default `/api/v1` stays same-origin
+2. Check browser console Network tab for the actual error (look at the
+   preflight OPTIONS request)
+3. If you intentionally serve the API from a different origin, the allowed
+   origins are configured in backend code (`allow_origins` in
+   `app/main.py`), not via environment variables — see
+   [Operations → CORS](operations.md#cors)
 
 ### Authentication Issues
 

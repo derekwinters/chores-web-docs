@@ -29,7 +29,7 @@ services:
       retries: 10
 
   backend:
-    image: ghcr.io/derekwinters/chores-web-backend:latest
+    image: ghcr.io/derekwinters/chores-web-backend:latest # v2.2.0
     environment:
       DATABASE_URL: postgresql+asyncpg://chores:chores@db/chores
       JWT_SECRET: "${JWT_SECRET:?Set JWT_SECRET in .env — generate one with 'openssl rand -hex 32'}"
@@ -46,7 +46,7 @@ services:
       start_period: 10s
 
   frontend:
-    image: ghcr.io/derekwinters/chores-web-frontend:latest
+    image: ghcr.io/derekwinters/chores-web-frontend:latest # v2.2.0
     ports:
       - "3000:80"
     depends_on:

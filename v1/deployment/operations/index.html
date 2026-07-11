@@ -11,7 +11,7 @@
       
       
       
-        <link rel="prev" href="../setup/">
+        <link rel="prev" href="../https/">
       
       
         <link rel="next" href="../maintenance/">
@@ -678,6 +678,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../https/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HTTPS / TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -1133,26 +1161,9 @@
 <h1 id="deployment-operations">Deployment Operations<a class="headerlink" href="#deployment-operations" title="Permanent link">&para;</a></h1>
 <h2 id="security">Security<a class="headerlink" href="#security" title="Permanent link">&para;</a></h2>
 <h3 id="https">HTTPS<a class="headerlink" href="#https" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Obtain SSL certificate (Let's Encrypt recommended)</li>
-<li>
-<p>Mount cert in nginx container:
-   <div class="highlight"><pre><span></span><code><span class="nt">volumes</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/letsencrypt/live/yourdomain:/etc/ssl/certs</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>Configure nginx SSL:
-   <div class="highlight"><pre><span></span><code><span class="k">server</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="kn">listen</span><span class="w"> </span><span class="mi">443</span><span class="w"> </span><span class="s">ssl</span><span class="p">;</span>
-<span class="w">  </span><span class="kn">server_name</span><span class="w"> </span><span class="s">yourdomain.com</span><span class="p">;</span>
-<span class="w">  </span><span class="kn">ssl_certificate</span><span class="w"> </span><span class="s">/etc/ssl/certs/fullchain.pem</span><span class="p">;</span>
-<span class="w">  </span><span class="kn">ssl_certificate_key</span><span class="w"> </span><span class="s">/etc/ssl/certs/privkey.pem</span><span class="p">;</span>
-<span class="w">  </span><span class="c1"># ... rest of config</span>
-<span class="p">}</span>
-</code></pre></div></p>
-</li>
-</ol>
+<p>See <a href="../https/">HTTPS / TLS</a> for putting a TLS-terminating reverse proxy
+(Caddy or nginx + certbot) in front of the stack, obtaining a Let's
+Encrypt certificate, and keeping it renewed.</p>
 <h3 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h3>
 <ul>
 <li>JWT tokens expire after 365 days</li>

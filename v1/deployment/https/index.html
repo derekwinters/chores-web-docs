@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../release-v100/">
+        <link rel="prev" href="../setup/">
       
       
-        <link rel="next" href="../release-v130/">
+        <link rel="next" href="../operations/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Release v1.2.0 - Chores Documentation</title>
+        <title>HTTPS / TLS - Chores Documentation</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#release-v120" class="md-skip">
+        <a href="#https-tls" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Release v1.2.0
+              HTTPS / TLS
             
           </span>
         </div>
@@ -246,11 +246,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="../" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../../blog/" class="md-tabs__link">
         
   
   
@@ -306,11 +304,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../deployment/setup/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../setup/" class="md-tabs__link">
           
   
   
@@ -333,9 +333,7 @@
           
             
               
-                
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -400,14 +398,12 @@
       
   
   
-    
-  
   
     
   
   
-    <li class="md-nav__item md-nav__item--active">
-      <a href="../" class="md-nav__link">
+    <li class="md-nav__item">
+      <a href="../../blog/" class="md-nav__link">
         
   
   
@@ -599,24 +595,29 @@
       
   
   
+    
   
   
+  
     
     
     
     
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   
@@ -634,7 +635,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -652,7 +653,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/setup/" class="md-nav__link">
+      <a href="../setup/" class="md-nav__link">
         
   
   
@@ -677,10 +678,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../deployment/https/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HTTPS / TLS
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -696,6 +724,109 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-caddy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended: Caddy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recommended: Caddy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verifying-renewal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying renewal
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternative-nginx-certbot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative: nginx + certbot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#forwarded-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forwarded headers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#updating-cors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updating CORS
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -708,7 +839,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/operations/" class="md-nav__link">
+      <a href="../operations/" class="md-nav__link">
         
   
   
@@ -736,7 +867,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/maintenance/" class="md-nav__link">
+      <a href="../maintenance/" class="md-nav__link">
         
   
   
@@ -772,8 +903,6 @@
             
             
               
-                
-              
               <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
@@ -793,44 +922,44 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
+  <a href="#architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Features
+        Architecture
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Features">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-caddy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended: Caddy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recommended: Caddy">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#database-migrations" class="md-nav__link">
+  <a href="#verifying-renewal" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Database &amp; Migrations
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#chore-filtering" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Chore Filtering
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#developer-ai-tooling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Developer &amp; AI Tooling
+        Verifying renewal
       
     </span>
   </a>
@@ -843,10 +972,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bug-fixes" class="md-nav__link">
+  <a href="#alternative-nginx-certbot" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Bug Fixes
+        Alternative: nginx + certbot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#forwarded-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forwarded headers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#updating-cors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updating CORS
       
     </span>
   </a>
@@ -862,133 +1013,214 @@
             
           
           
-  <div class="md-content md-content--post" data-md-component="content">
-    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
-      <div class="md-sidebar__scrollwrap">
-        <div class="md-sidebar__inner md-post">
-          <nav class="md-nav md-nav--primary">
-            <div class="md-post__back">
-              <div class="md-nav__title md-nav__container">
-                <a href="../" class="md-nav__link">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-                  <span class="md-ellipsis">
-                    Back to index
-                  </span>
-                </a>
-              </div>
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="https-tls">HTTPS / TLS<a class="headerlink" href="#https-tls" title="Permanent link">&para;</a></h1>
+<p>The bundled stack serves plain HTTP. For anything reachable outside your own
+machine, put a TLS-terminating reverse proxy in front of it and get a
+certificate from <a href="https://letsencrypt.org/">Let's Encrypt</a>.</p>
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<p>The proxy sits at the edge and forwards plaintext HTTP to the <code>frontend</code>
+container over the compose network; <code>frontend</code>'s own Nginx keeps proxying
+<code>/api/</code> to <code>backend</code> exactly as it does today. Nothing in the app needs to
+know TLS is involved — it terminates entirely at the edge.</p>
+<div class="highlight"><pre><span></span><code>client --HTTPS--&gt; [reverse proxy :443] --HTTP--&gt; frontend:80 --HTTP--&gt; backend:8000
+</code></pre></div>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li>A domain name with a DNS <strong>A</strong> (and/or <strong>AAAA</strong>) record pointing at this
+  host's public IP.</li>
+<li>Ports <strong>80</strong> and <strong>443</strong> reachable from the internet. Port 80 is required
+  for the ACME HTTP-01 challenge that both options below use, and is also
+  used to redirect HTTP → HTTPS.</li>
+</ul>
+<h2 id="recommended-caddy">Recommended: Caddy<a class="headerlink" href="#recommended-caddy" title="Permanent link">&para;</a></h2>
+<p><a href="https://caddyserver.com/">Caddy</a> requests and renews the Let's Encrypt
+certificate automatically — there's no certbot container, cron job, or
+renewal hook to maintain. This is the path documented and smoke-tested
+here.</p>
+<ol>
+<li><strong>Download the overlay files</strong> alongside your <code>docker-compose.yml</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-fsSLO<span class="w"> </span>https://raw.githubusercontent.com/derekwinters/chores-web-docs/main/docs/deployment/docker-compose.https.yml
+curl<span class="w"> </span>-fsSLO<span class="w"> </span>https://raw.githubusercontent.com/derekwinters/chores-web-docs/main/docs/deployment/Caddyfile
+</code></pre></div>
+<ol>
+<li><strong>Set your domain</strong> in <code>.env</code> (alongside <code>JWT_SECRET</code>, see
+   <a href="../setup/">Setup</a>):</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;DOMAIN=chores.example.com&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.env
+</code></pre></div>
+<ol>
+<li><strong>Start the stack with the HTTPS overlay:</strong></li>
+</ol>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.yml<span class="w"> </span>-f<span class="w"> </span>docker-compose.https.yml<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>Caddy listens on 80/443, obtains a certificate for <code>DOMAIN</code> on first
+   request, and reverse-proxies to <code>frontend:80</code>.</p>
+<p>The overlay file and Caddyfile:</p>
+<div class="highlight"><span class="filename">docker-compose.https.yml</span><pre><span></span><code><span class="c1"># HTTPS overlay for the base stack (docker-compose.yml).</span>
+<span class="c1">#</span>
+<span class="c1"># Adds a Caddy reverse proxy that terminates TLS in front of the frontend</span>
+<span class="c1"># container and gets its certificate from Let&#39;s Encrypt automatically. This</span>
+<span class="c1"># file only adds the `caddy` service — it does not repeat the</span>
+<span class="c1"># `db`/`backend`/`frontend` services themselves.</span>
+<span class="c1">#</span>
+<span class="c1"># The frontend&#39;s own &quot;3000:80&quot; port mapping from the base file is still</span>
+<span class="c1"># published alongside Caddy&#39;s 80/443. That&#39;s harmless for a host that&#39;s</span>
+<span class="c1"># otherwise firewalled, but in production you likely want the reverse proxy</span>
+<span class="c1"># to be the only public entrypoint — either firewall off 3000 or drop that</span>
+<span class="c1"># port mapping from your own copy of docker-compose.yml.</span>
+<span class="c1">#</span>
+<span class="c1"># Usage:</span>
+<span class="c1">#   docker compose -f docker-compose.yml -f docker-compose.https.yml up -d</span>
+<span class="c1">#</span>
+<span class="c1"># Requires:</span>
+<span class="c1">#   - A domain&#39;s DNS A/AAAA record pointing at this host</span>
+<span class="c1">#   - Ports 80 and 443 reachable from the internet (80 is used for the</span>
+<span class="c1">#     ACME HTTP-01 challenge and to redirect to HTTPS)</span>
+<span class="c1">#   - DOMAIN set in .env, e.g. DOMAIN=chores.example.com</span>
+
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">caddy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">caddy:2-alpine</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;80:80&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;443:443&quot;</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">DOMAIN</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${DOMAIN:?Set</span><span class="nv"> </span><span class="s">DOMAIN</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">.env,</span><span class="nv"> </span><span class="s">e.g.</span><span class="nv"> </span><span class="s">DOMAIN=chores.example.com}&quot;</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./Caddyfile:/etc/caddy/Caddyfile:ro</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chores-caddy-data:/data</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chores-caddy-config:/config</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">frontend</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service_started</span>
+
+<span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">chores-caddy-data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">chores-caddy-config</span><span class="p">:</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Caddyfile</span><pre><span></span><code># Caddyfile for the docker-compose.https.yml overlay.
+#
+# Caddy requests and renews the Let&#39;s Encrypt certificate for {$DOMAIN}
+# automatically — no certbot, no cron job, no manual renewal step. It also
+# redirects plain HTTP to HTTPS by default.
+{$DOMAIN} {
+    reverse_proxy frontend:80 {
+        header_up X-Forwarded-Proto {scheme}
+        header_up X-Forwarded-For {remote_host}
+        header_up Host {host}
+    }
+}
+</code></pre></div>
+<h3 id="verifying-renewal">Verifying renewal<a class="headerlink" href="#verifying-renewal" title="Permanent link">&para;</a></h3>
+<p>Caddy renews certificates automatically in the background well before
+expiry — there's nothing to schedule. To confirm it's working, check the
+logs:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>caddy<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>certificate
+</code></pre></div>
+<h2 id="alternative-nginx-certbot">Alternative: nginx + certbot<a class="headerlink" href="#alternative-nginx-certbot" title="Permanent link">&para;</a></h2>
+<p>If you're already standardized on nginx at the edge, terminate TLS there
+instead. This requires more manual wiring than Caddy: you own certificate
+acquisition, renewal, and reloading nginx after each renewal.</p>
+<ol>
+<li><strong>Obtain a certificate</strong> with <a href="https://certbot.eff.org/">certbot</a>, e.g.
+   via the webroot method (adjust paths to wherever nginx serves the ACME
+   challenge from):</li>
+</ol>
+<div class="highlight"><pre><span></span><code>certbot<span class="w"> </span>certonly<span class="w"> </span>--webroot<span class="w"> </span>-w<span class="w"> </span>/var/www/certbot<span class="w"> </span>-d<span class="w"> </span>chores.example.com
+</code></pre></div>
+<ol>
+<li><strong>Mount the certificate</strong> into the nginx container:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/etc/letsencrypt/live/chores.example.com:/etc/ssl/certs:ro</span>
+</code></pre></div>
+<ol>
+<li><strong>Configure nginx</strong> to terminate TLS and proxy to the frontend
+   container, forwarding the standard headers:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kn">listen</span><span class="w"> </span><span class="mi">443</span><span class="w"> </span><span class="s">ssl</span><span class="p">;</span>
+<span class="w">  </span><span class="kn">server_name</span><span class="w"> </span><span class="s">chores.example.com</span><span class="p">;</span>
+<span class="w">  </span><span class="kn">ssl_certificate</span><span class="w">     </span><span class="s">/etc/ssl/certs/fullchain.pem</span><span class="p">;</span>
+<span class="w">  </span><span class="kn">ssl_certificate_key</span><span class="w"> </span><span class="s">/etc/ssl/certs/privkey.pem</span><span class="p">;</span>
+
+<span class="w">  </span><span class="kn">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://frontend:80</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$host</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-Proto</span><span class="w"> </span><span class="nv">$scheme</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-For</span><span class="w"> </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
+<span class="w">  </span><span class="kn">server_name</span><span class="w"> </span><span class="s">chores.example.com</span><span class="p">;</span>
+<span class="w">  </span><span class="kn">location</span><span class="w"> </span><span class="s">/.well-known/acme-challenge/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">root</span><span class="w"> </span><span class="s">/var/www/certbot</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="kn">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">return</span><span class="w"> </span><span class="mi">301</span><span class="w"> </span><span class="s">https://</span><span class="nv">$host$request_uri</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<ol>
+<li><strong>Automate renewal.</strong> Certificates from Let's Encrypt expire every 90
+   days. Run <code>certbot renew</code> on a schedule (systemd timer or cron) and
+   reload nginx afterward so it picks up the renewed certificate:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>certbot<span class="w"> </span>renew<span class="w"> </span>--quiet<span class="w"> </span>--deploy-hook<span class="w"> </span><span class="s2">&quot;docker compose exec nginx nginx -s reload&quot;</span>
+</code></pre></div>
+<p>Verify the renewal path works without waiting 90 days:</p>
+<div class="highlight"><pre><span></span><code>certbot<span class="w"> </span>renew<span class="w"> </span>--dry-run
+</code></pre></div>
+<h2 id="forwarded-headers">Forwarded headers<a class="headerlink" href="#forwarded-headers" title="Permanent link">&para;</a></h2>
+<p>Both examples above set <code>X-Forwarded-Proto</code>, <code>X-Forwarded-For</code>, and <code>Host</code>
+on the proxied request, which is the standard way to tell the app it's
+being served over HTTPS even though the connection to it is plain HTTP.</p>
+<div class="admonition warning">
+<p class="admonition-title">Unverified against application code</p>
+<p>Whether the frontend and backend containers currently <em>read and act on</em>
+these headers — for example, generating <code>https://</code> URLs, treating the
+connection as secure for cookie flags, or trusting <code>X-Forwarded-For</code>
+for logging — has not been verified against the <code>chores-web-frontend</code>
+and <code>chores-web-backend</code> source. If you hit mixed-content warnings,
+incorrect redirects, or cookies not being marked <code>Secure</code> once you're
+behind TLS, that's the first place to look; please open an issue in the
+relevant repository if you find gaps.</p>
+</div>
+<h2 id="updating-cors">Updating CORS<a class="headerlink" href="#updating-cors" title="Permanent link">&para;</a></h2>
+<p>If the backend is reachable directly (not only through the frontend's
+<code>/api/</code> proxy) or you're serving the frontend from a different origin than
+the backend, update <code>allow_origins</code> to your HTTPS origin — see
+<a href="../operations/#cors">Operations → CORS</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
             </div>
-            
-            <ul class="md-post__meta md-nav__list">
-              <li class="md-nav__item md-nav__item--section">
-                <div class="md-post__title">
-                  <span class="md-ellipsis">
-                    Metadata
-                  </span>
-                </div>
-                <nav class="md-nav">
-                  <ul class="md-nav__list">
-                    <li class="md-nav__item">
-                      <div class="md-nav__link">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
-                        <time datetime="2026-05-08 00:00:00+00:00" class="md-ellipsis">May 8, 2026</time>
-                      </div>
-                    </li>
-                    
-                    
-                      <li class="md-nav__item">
-                        <div class="md-nav__link">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"/></svg>
-                          <span class="md-ellipsis">
-                            in
-                            
-                              <a href="../category/release-notes/">Release Notes</a></span>
-                        </div>
-                      </li>
-                    
-                    
-                      
-                      <li class="md-nav__item">
-                        <div class="md-nav__link">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
-                          <span class="md-ellipsis">
-                            
-                              1 min read
-                            
-                          </span>
-                        </div>
-                      </li>
-                    
-                  </ul>
-                </nav>
-              </li>
-            </ul>
-            
-          </nav>
           
-        </div>
-      </div>
-    </div>
-    <article class="md-content__inner md-typeset">
-      
-        
-  
-
-
-
-  
-  
-
-
-<h1 id="release-v120">Release v1.2.0<a class="headerlink" href="#release-v120" title="Permanent link">&para;</a></h1>
-<p>v1.2.0 introduces database migration infrastructure, a configurable due-soon threshold, better startup UX, and a new AI-assisted implementation workflow.</p>
-<!-- more -->
-
-<h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
-<h3 id="database-migrations">Database &amp; Migrations<a class="headerlink" href="#database-migrations" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Alembic migrations set up for schema management</li>
-<li>Database status tracking with <code>/db-status</code> endpoint</li>
-<li>"Update In Progress" UI shown during database startup and migrations</li>
-</ul>
-<h3 id="chore-filtering">Chore Filtering<a class="headerlink" href="#chore-filtering" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Configurable due-soon threshold — adjust how far ahead "due soon" looks</li>
-</ul>
-<h3 id="developer-ai-tooling">Developer &amp; AI Tooling<a class="headerlink" href="#developer-ai-tooling" title="Permanent link">&para;</a></h3>
-<ul>
-<li><code>github-issue-categorize</code> skill added</li>
-<li><code>github-issue-implementation-orchestrator</code> agent added</li>
-<li><code>github-issue-plan-orchestrator</code> agent added</li>
-</ul>
-<h2 id="bug-fixes">Bug Fixes<a class="headerlink" href="#bug-fixes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Database sequences initialized to prevent primary key constraint violations on fresh installs</li>
-<li>Documentation validation added as a PR check</li>
-<li>gh-pages deployment corrected to handle history conflicts</li>
-<li>Documentation build failures resolved</li>
-<li>Missing Docker push permissions for ghcr.io added</li>
-</ul>
-
-
-
-
-
-
-
-  
-  
-
-
-
-
-  
-
-
-
-      
-    </article>
-  </div>
-
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>

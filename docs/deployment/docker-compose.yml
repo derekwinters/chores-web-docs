@@ -32,7 +32,7 @@ services:
     image: ghcr.io/derekwinters/chores-web-backend:latest
     environment:
       DATABASE_URL: postgresql+asyncpg://chores:chores@db/chores
-      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env — generate one with: openssl rand -hex 32}
+      JWT_SECRET: "${JWT_SECRET:?Set JWT_SECRET in .env — generate one with 'openssl rand -hex 32'}"
     ports:
       - "8000:8000"
     depends_on:

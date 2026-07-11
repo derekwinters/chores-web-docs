@@ -47,3 +47,47 @@ jobs:
         run: |
           docker compose ps -a
           docker compose logs
+
+  # The HTTPS guide embeds docker-compose.https.yml and Caddyfile verbatim.
+  # Real Let's Encrypt issuance needs a public domain + internet-reachable
+  # port 80/443, which a runner doesn't have, so this swaps in Caddy's
+  # internal (self-signed) CA to prove the overlay and proxy config are
+  # otherwise correct: the stack boots, Caddy terminates TLS, and traffic
+  # reaches the frontend.
+  https-smoke:
+    runs-on: ubuntu-latest
+    env:
+      JWT_SECRET: docs-smoke-test-secret
+      DOMAIN: localhost
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - name: Use Caddy's internal CA instead of Let's Encrypt for this test
+        working-directory: docs/deployment
+        run: |
+          cat > Caddyfile <<'EOF'
+          {$DOMAIN} {
+            tls internal
+            reverse_proxy frontend:80 {
+              header_up X-Forwarded-Proto {scheme}
+              header_up X-Forwarded-For {remote_host}
+              header_up Host {host}
+            }
+          }
+          EOF
+      - name: Boot the documented HTTPS overlay
+        working-directory: docs/deployment
+        run: docker compose -f docker-compose.yml -f docker-compose.https.yml up -d --wait --wait-timeout 180
+      - name: Assert HTTPS termination reaches the frontend
+        run: |
+          for i in $(seq 1 10); do
+            curl -fsSk -o /dev/null https://localhost/ && break
+            [ "$i" -eq 10 ] && { echo "https frontend never came up"; exit 1; }
+            sleep 2
+          done
+          curl -fsSk https://localhost/api/health
+      - name: Collect logs on failure
+        if: failure()
+        working-directory: docs/deployment
+        run: |
+          docker compose -f docker-compose.yml -f docker-compose.https.yml ps -a
+          docker compose -f docker-compose.yml -f docker-compose.https.yml logs

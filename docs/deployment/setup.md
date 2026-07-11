@@ -61,10 +61,10 @@ This starts:
    `DATABASE_URL` at an external PostgreSQL instance and remove the `db`
    service.
 
-4. **Terminate HTTPS in front of the stack** — put a TLS-terminating reverse
-   proxy (or the nginx SSL configuration from
-   [Operations → Security](operations.md#https)) in front of the frontend
-   port.
+4. **Terminate HTTPS in front of the stack** — see
+   [HTTPS / TLS](https.md) for putting a TLS-terminating reverse proxy
+   (Caddy or nginx + certbot) in front of the frontend port and obtaining a
+   Let's Encrypt certificate.
 
 5. **Start and verify:**
    ```bash

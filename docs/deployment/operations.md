@@ -4,23 +4,9 @@
 
 ### HTTPS
 
-1. Obtain SSL certificate (Let's Encrypt recommended)
-2. Mount cert in nginx container:
-   ```yaml
-   volumes:
-     - /etc/letsencrypt/live/yourdomain:/etc/ssl/certs
-   ```
-
-3. Configure nginx SSL:
-   ```nginx
-   server {
-     listen 443 ssl;
-     server_name yourdomain.com;
-     ssl_certificate /etc/ssl/certs/fullchain.pem;
-     ssl_certificate_key /etc/ssl/certs/privkey.pem;
-     # ... rest of config
-   }
-   ```
+See [HTTPS / TLS](https.md) for putting a TLS-terminating reverse proxy
+(Caddy or nginx + certbot) in front of the stack, obtaining a Let's
+Encrypt certificate, and keeping it renewed.
 
 ### Authentication
 

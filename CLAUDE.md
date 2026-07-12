@@ -36,3 +36,21 @@ new docs version tree on the next deploy.
 ## Build
 
 `mkdocs build --strict` must pass — it is the PR gate.
+
+## Commit Hygiene
+
+- Every commit that lands on `main` — including squash-merge commits — must
+  follow Conventional Commits: `type(scope): description`. Valid types:
+  `feat`, `fix`, `chore`, `ci`, `docs`, `build`, `refactor`, `test`, `perf`,
+  `revert`. This repo doesn't run release-please or semver releases (docs
+  versions track `API_VERSION`, not commit history), but consistent,
+  parseable commit messages are still required across the `chores-web-*`
+  repos, and a squash merge bakes the PR title in as the permanent commit
+  on `main` regardless of how that PR was originally titled. When merging,
+  pick a squash title that matches the actual nature of the change — never
+  default to `chore` or carry over a non-conventional PR title unchanged.
+- Commit-authoring work — writing the change, drafting the commit message,
+  opening the PR — must be done by a delegated implementation agent, not by
+  an orchestrating/main Claude Code session directly. The orchestrating
+  session delegates, reviews CI, and merges, applying the rule above to
+  whatever squash title it chooses.

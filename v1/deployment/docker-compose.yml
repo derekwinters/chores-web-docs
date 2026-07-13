@@ -46,7 +46,7 @@ services:
       start_period: 10s
 
   frontend:
-    image: ghcr.io/derekwinters/chores-web-frontend:latest # v2.2.0
+    image: ghcr.io/derekwinters/chores-web-frontend:latest # v2.3.0
     ports:
       - "3000:80"
     depends_on:

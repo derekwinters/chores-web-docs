@@ -85,6 +85,7 @@ nav:
   - User Guide:
     - Getting Started: user-guide/getting-started.md
     - Admin Features: user-guide/admin.md
+    - Notifications: user-guide/notifications.md
     - Help & Troubleshooting: user-guide/help.md
   - API Reference: api/index.md
   - Deployment:

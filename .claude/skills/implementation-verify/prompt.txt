@@ -1,0 +1,46 @@
+Re-run the strict docs build and show a changed-files summary for user review.
+
+Input: issue_number (optional)
+
+Verify reuses the strict build — no second command is invented. This repo has
+no test suite, so verify collapses into the test state: it runs the same
+`mkdocs build --strict` again and adds a changed-files summary.
+
+Steps:
+1. Build: mkdocs build --strict (the same command as the test state)
+2. Check exit code: 0 = success, non-zero = strict-mode failure
+3. Prepare changes summary:
+   - git diff --stat to get file changes
+   - Count modified files
+   - Summarize what was changed (guide page, API reference, blog, nav)
+4. Show summary with:
+   - Issue number and title
+   - Files modified (with line counts)
+   - Summary of changes
+   - Strict-build result (verify == test for this repo)
+5. Pause and ask user:
+   - Approve for commit?
+   - Request more changes?
+   - Abort?
+
+Output format:
+┌─────────────────────────────────────────┐
+│ Issue #42: Document notification setup   │
+│ Verification Complete                    │
+└─────────────────────────────────────────┘
+
+Files Modified:
+- docs/guide/notifications.md: +85, -0 lines
+- docs/api/notifications.md: +62, -0 lines
+- mkdocs.yml: +4, -0 lines
+
+Summary:
+Added a notifications user-guide page and an API reference page, wired both
+into the nav in mkdocs.yml.
+
+Build: ✅ mkdocs build --strict passed (verify re-runs the test-state command)
+
+Ready to proceed?
+- [Approve for commit]
+- [Request changes]
+- [Abort]

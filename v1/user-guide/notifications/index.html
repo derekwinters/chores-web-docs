@@ -11,10 +11,10 @@
       
       
       
-        <link rel="prev" href="../release-v170/">
+        <link rel="prev" href="../admin/">
       
       
-        <link rel="next" href="../release-v190/">
+        <link rel="next" href="../help/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Release v1.8.0 - Chores Documentation</title>
+        <title>Notifications - Chores Documentation</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#release-v180" class="md-skip">
+        <a href="#notifications" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Release v1.8.0
+              Notifications
             
           </span>
         </div>
@@ -246,11 +246,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="../" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../../blog/" class="md-tabs__link">
         
   
   
@@ -267,11 +265,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../user-guide/getting-started/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../getting-started/" class="md-tabs__link">
           
   
   
@@ -333,9 +333,7 @@
           
             
               
-                
-              
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -400,14 +398,12 @@
       
   
   
-    
-  
   
     
   
   
-    <li class="md-nav__item md-nav__item--active">
-      <a href="../" class="md-nav__link">
+    <li class="md-nav__item">
+      <a href="../../blog/" class="md-nav__link">
         
   
   
@@ -431,24 +427,29 @@
       
   
   
+    
   
   
+  
     
     
     
     
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -466,7 +467,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -484,7 +485,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../user-guide/getting-started/" class="md-nav__link">
+      <a href="../getting-started/" class="md-nav__link">
         
   
   
@@ -512,7 +513,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../user-guide/admin/" class="md-nav__link">
+      <a href="../admin/" class="md-nav__link">
         
   
   
@@ -537,10 +538,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../user-guide/notifications/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notifications
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -556,6 +584,204 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-triggers-a-notification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Triggers a Notification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What Triggers a Notification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chore-due-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chore-Due Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-notifications-are-delivered-and-cleared" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Notifications Are Delivered and Cleared
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How Notifications Are Delivered and Cleared">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#delivery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delivery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acknowledgement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acknowledgement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automatic-stale-dismissal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automatic (stale) dismissal
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-the-web-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In the Web App
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="In the Web App">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-notification-bell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Notification Bell
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-notification-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Notification Log
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#on-android" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        On Android
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="On Android">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#background-polling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Background Polling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configurable-poll-interval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurable Poll Interval
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#not-connected-in-x-days-alert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Not Connected in X Days" Alert
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notification-preferences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notification Preferences
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -568,7 +794,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../user-guide/help/" class="md-nav__link">
+      <a href="../help/" class="md-nav__link">
         
   
   
@@ -800,8 +1026,6 @@
             
             
               
-                
-              
               <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
@@ -821,33 +1045,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
+  <a href="#what-triggers-a-notification" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Features
+        What Triggers a Notification
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Features">
+    <nav class="md-nav" aria-label="What Triggers a Notification">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#chore-settings" class="md-nav__link">
+  <a href="#chore-due-events" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Chore Settings
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#error-handling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Error Handling
+        Chore-Due Events
       
     </span>
   </a>
@@ -860,10 +1073,149 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bug-fixes" class="md-nav__link">
+  <a href="#how-notifications-are-delivered-and-cleared" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Bug Fixes
+        How Notifications Are Delivered and Cleared
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How Notifications Are Delivered and Cleared">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#delivery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delivery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acknowledgement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acknowledgement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automatic-stale-dismissal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automatic (stale) dismissal
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-the-web-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In the Web App
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="In the Web App">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-notification-bell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Notification Bell
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-notification-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Notification Log
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#on-android" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        On Android
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="On Android">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#background-polling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Background Polling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configurable-poll-interval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurable Poll Interval
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#not-connected-in-x-days-alert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Not Connected in X Days" Alert
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notification-preferences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notification Preferences
       
     </span>
   </a>
@@ -879,124 +1231,154 @@
             
           
           
-  <div class="md-content md-content--post" data-md-component="content">
-    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
-      <div class="md-sidebar__scrollwrap">
-        <div class="md-sidebar__inner md-post">
-          <nav class="md-nav md-nav--primary">
-            <div class="md-post__back">
-              <div class="md-nav__title md-nav__container">
-                <a href="../" class="md-nav__link">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-                  <span class="md-ellipsis">
-                    Back to index
-                  </span>
-                </a>
-              </div>
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="notifications">Notifications<a class="headerlink" href="#notifications" title="Permanent link">&para;</a></h1>
+<p>Chores Web keeps you on top of your responsibilities with notifications. When a
+chore becomes due, the app lets you know — in the web app through an in-app bell
+and toast, and on Android through a system notification. This page explains what
+triggers a notification, how notifications are delivered and cleared, and how to
+control which ones you receive.</p>
+<hr />
+<h2 id="what-triggers-a-notification">What Triggers a Notification<a class="headerlink" href="#what-triggers-a-notification" title="Permanent link">&para;</a></h2>
+<h3 id="chore-due-events">Chore-Due Events<a class="headerlink" href="#chore-due-events" title="Permanent link">&para;</a></h3>
+<p>The current version supports a single kind of notification: <strong>chore due</strong>.</p>
+<ul>
+<li>When a chore becomes due, Chores Web generates one notification for each
+  person the chore is relevant to (the assignee for a fixed or rotating chore,
+  or everyone eligible for an open chore).</li>
+<li>The moment a chore is considered "due" is controlled by the household's
+  <strong>due time hour</strong> setting — the hour of day when scheduled chores transition
+  to due/overdue. See <a href="../admin/">Admin Features</a> for how admins configure this.</li>
+<li>You only get a notification for a chore that is actually relevant to you — you
+  will not be notified about chores assigned to someone else.</li>
+</ul>
+<hr />
+<h2 id="how-notifications-are-delivered-and-cleared">How Notifications Are Delivered and Cleared<a class="headerlink" href="#how-notifications-are-delivered-and-cleared" title="Permanent link">&para;</a></h2>
+<p>The server owns the state of every notification, so your notifications stay
+consistent across the web app and the Android app.</p>
+<h3 id="delivery">Delivery<a class="headerlink" href="#delivery" title="Permanent link">&para;</a></h3>
+<ul>
+<li>A notification is <strong>delivered</strong> the first time a client fetches it. The server
+  records the delivery time at that point, so a given notification is only ever
+  "new" once, no matter which device sees it first.</li>
+</ul>
+<h3 id="acknowledgement">Acknowledgement<a class="headerlink" href="#acknowledgement" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Acknowledging</strong> a notification marks it as handled. Acknowledge a
+  notification once you have seen it and no longer need to be reminded.</li>
+<li>Acknowledgement is shared across devices — acknowledge on the web and it is
+  acknowledged on Android too.</li>
+</ul>
+<h3 id="automatic-stale-dismissal">Automatic (stale) dismissal<a class="headerlink" href="#automatic-stale-dismissal" title="Permanent link">&para;</a></h3>
+<p>You do not have to clean up old notifications yourself. The server dismisses
+notifications automatically:</p>
+<ul>
+<li>If a chore-due notification is never acknowledged and its chore is no longer
+  due (for example, someone completed or skipped the chore), the server marks
+  the notification <strong>dismissed</strong> — it disappears without you having to do
+  anything.</li>
+<li>A notification that becomes stale <em>before</em> it is ever delivered is never shown
+  at all. This means you won't be greeted by a pile of notifications for chores
+  that were already handled while you were away.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Because dismissal is automatic and server-side, there is nothing to purge or
+reset manually. Acknowledge the notifications you have acted on, and let the
+server clear the rest.</p>
+</div>
+<hr />
+<h2 id="in-the-web-app">In the Web App<a class="headerlink" href="#in-the-web-app" title="Permanent link">&para;</a></h2>
+<h3 id="the-notification-bell">The Notification Bell<a class="headerlink" href="#the-notification-bell" title="Permanent link">&para;</a></h3>
+<ul>
+<li>A <strong>bell icon</strong> sits in the top navigation bar.</li>
+<li>An <strong>unread badge</strong> on the bell shows how many notifications you have not yet
+  acknowledged.</li>
+<li>When a new notification arrives, a <strong>toast</strong> briefly appears so you notice it
+  without having to open the bell.</li>
+</ul>
+<h3 id="the-notification-log">The Notification Log<a class="headerlink" href="#the-notification-log" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Click the <strong>bell</strong> (or navigate to <strong>Notifications</strong>) to open the log view.</li>
+<li>The log lists your notifications, newest first, with each chore-due item
+   showing what is due.</li>
+<li>Click <strong>Acknowledge</strong> on an item once you have dealt with it. Acknowledged
+   items clear from your unread count.</li>
+</ol>
+<hr />
+<h2 id="on-android">On Android<a class="headerlink" href="#on-android" title="Permanent link">&para;</a></h2>
+<p>The Android app surfaces the same notifications as system notifications in your
+device's notification tray.</p>
+<h3 id="background-polling">Background Polling<a class="headerlink" href="#background-polling" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The Android app checks the server for new notifications on a schedule, in the
+  background, using Android's built-in <strong>WorkManager</strong>.</li>
+<li>When it finds new notifications, it posts them as <strong>system notifications</strong> —
+  the standard Android notifications that appear in your tray and on your lock
+  screen.</li>
+<li>There is <strong>no push/FCM</strong> involved: notifications are pulled by the app on its
+  polling schedule rather than pushed instantly from a server. A brand-new
+  chore-due notification appears at the next poll, not necessarily the instant
+  it is generated.</li>
+</ul>
+<h3 id="configurable-poll-interval">Configurable Poll Interval<a class="headerlink" href="#configurable-poll-interval" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The polling frequency is configurable in the Android app's <strong>Settings</strong>
+  screen. A shorter interval means more timely notifications; a longer interval
+  is easier on battery and data.</li>
+</ul>
+<h3 id="not-connected-in-x-days-alert">"Not Connected in X Days" Alert<a class="headerlink" href="#not-connected-in-x-days-alert" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The Android app also raises a local alert if it has not managed to reach the
+  server recently — the <strong>"not connected in X days"</strong> reminder.</li>
+<li>This is generated on the device itself (not by the server), so it can warn you
+  even when connectivity is the very thing that is broken.</li>
+<li>The number of days before this alert fires is also configurable in the Android
+  app's <strong>Settings</strong> screen.</li>
+</ul>
+<hr />
+<h2 id="notification-preferences">Notification Preferences<a class="headerlink" href="#notification-preferences" title="Permanent link">&para;</a></h2>
+<p>You can control which types of notification you receive.</p>
+<ul>
+<li>Preferences are <strong>per type</strong>. In the current version there is one type,
+  <strong>chore due</strong>, which you can enable or disable.</li>
+<li>A type you have not explicitly changed is <strong>enabled by default</strong> — if you have
+  never touched your notification preferences, you receive all notifications.</li>
+<li>Edit your preferences in the <strong>web app's Settings</strong> section or on the
+  <strong>Android app's Settings</strong> screen. Your preferences apply to your account, so
+  they take effect on every device you sign in to.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Disabling the <strong>chore due</strong> type stops new chore-due notifications from being
+generated for you. Re-enable it at any time from either client's settings.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
             </div>
-            
-            <ul class="md-post__meta md-nav__list">
-              <li class="md-nav__item md-nav__item--section">
-                <div class="md-post__title">
-                  <span class="md-ellipsis">
-                    Metadata
-                  </span>
-                </div>
-                <nav class="md-nav">
-                  <ul class="md-nav__list">
-                    <li class="md-nav__item">
-                      <div class="md-nav__link">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
-                        <time datetime="2026-05-27 00:00:00+00:00" class="md-ellipsis">May 27, 2026</time>
-                      </div>
-                    </li>
-                    
-                    
-                      <li class="md-nav__item">
-                        <div class="md-nav__link">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"/></svg>
-                          <span class="md-ellipsis">
-                            in
-                            
-                              <a href="../category/release-notes/">Release Notes</a></span>
-                        </div>
-                      </li>
-                    
-                    
-                      
-                      <li class="md-nav__item">
-                        <div class="md-nav__link">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
-                          <span class="md-ellipsis">
-                            
-                              1 min read
-                            
-                          </span>
-                        </div>
-                      </li>
-                    
-                  </ul>
-                </nav>
-              </li>
-            </ul>
-            
-          </nav>
           
-        </div>
-      </div>
-    </div>
-    <article class="md-content__inner md-typeset">
-      
-        
-  
-
-
-
-  
-  
-
-
-<h1 id="release-v180">Release v1.8.0<a class="headerlink" href="#release-v180" title="Permanent link">&para;</a></h1>
-<p>v1.8.0 improves error visibility, adds a configurable overdue-chore schedule setting, and fixes several UI consistency issues across mobile and settings pages.</p>
-<!-- more -->
-
-<h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
-<h3 id="chore-settings">Chore Settings<a class="headerlink" href="#chore-settings" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Overdue-chore transition hour is now configurable — set the hour of day when scheduled chores become overdue via the new <code>due_time_hour</code> setting (#205)</li>
-</ul>
-<h3 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Structured error handling added across backend routers and services — errors are logged with proper HTTP status codes instead of silently failing (#195)</li>
-</ul>
-<h2 id="bug-fixes">Bug Fixes<a class="headerlink" href="#bug-fixes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Hidden backend errors now surface in the Log page UI — fetch failures show an error message instead of a blank page (#204)</li>
-<li>Mobile top navigation dropdown now opens downward — the UserAvatarMenu no longer clips off-screen on small viewports (#216)</li>
-<li>Settings sidebar HR now aligns with the heading and nav links — consistent left-edge alignment across all sidebar elements (#199)</li>
-<li>Sidebar state is restored on viewport resize — the sidebar remembers your desktop preference and auto-closes on mobile instead of getting stuck (#181)</li>
-</ul>
-
-
-
-
-
-
-
-  
-  
-
-
-
-
-  
-
-
-
-      
-    </article>
-  </div>
-
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>

@@ -14,7 +14,7 @@
         <link rel="prev" href="../getting-started/">
       
       
-        <link rel="next" href="../help/">
+        <link rel="next" href="../notifications/">
       
       
         
@@ -629,6 +629,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notifications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#unsaved-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -709,6 +720,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../notifications/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notifications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1028,6 +1067,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notifications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#unsaved-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1171,6 +1221,25 @@
 - Admin theme (applies to all users)
 - System name/title (optional)
 - Custom theme colors</p>
+<h3 id="notifications">Notifications<a class="headerlink" href="#notifications" title="Permanent link">&para;</a></h3>
+<p>Chores Web notifies each person when a chore becomes due (see the
+<a href="../notifications/">Notifications</a> guide for the full user-facing behavior).
+The generation of these chore-due notifications is driven by the same
+household schedule settings admins already manage:</p>
+<ul>
+<li><strong><code>due_time_hour</code></strong> – the hour of day when scheduled chores transition to
+  due/overdue. Chore-due notifications are generated at this transition, so
+  changing <code>due_time_hour</code> also changes when people are notified.</li>
+<li><strong><code>due_soon_days</code></strong> – the window used to consider a chore "due soon." Widening
+  or narrowing this window changes which chores are surfaced as due, and
+  therefore which ones generate notifications.</li>
+</ul>
+<p>There is no separate notification schedule to configure — tuning these two
+settings is how admins control notification timing.</p>
+<p><strong>Stale notifications clean up themselves.</strong> When a chore is completed, skipped,
+or otherwise no longer due, any unacknowledged notification for it is dismissed
+automatically by the server. Admins do not need to purge, reset, or otherwise
+maintain a notification queue — there is no manual cleanup step.</p>
 <h3 id="unsaved-changes">Unsaved Changes<a class="headerlink" href="#unsaved-changes" title="Permanent link">&para;</a></h3>
 <p>Settings pages track unsaved changes:</p>
 <ul>

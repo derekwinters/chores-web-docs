@@ -11,10 +11,8 @@
       
       
       
-        <link rel="prev" href="../release-v170/">
+        <link rel="prev" href="../release-v180/">
       
-      
-        <link rel="next" href="../release-v190/">
       
       
         
@@ -25,7 +23,7 @@
     
     
       
-        <title>Release v1.8.0 - Chores Documentation</title>
+        <title>Release v1.9.0 - Chores Documentation</title>
       
     
     
@@ -78,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#release-v180" class="md-skip">
+        <a href="#release-v190" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Release v1.8.0
+              Release v1.9.0
             
           </span>
         </div>
@@ -833,10 +831,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#chore-settings" class="md-nav__link">
+  <a href="#notifications" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Chore Settings
+        Notifications
       
     </span>
   </a>
@@ -844,10 +842,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#error-handling" class="md-nav__link">
+  <a href="#web-app" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Error Handling
+        Web App
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#android-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Android App
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preferences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preferences
       
     </span>
   </a>
@@ -856,17 +876,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bug-fixes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Bug Fixes
-      
-    </span>
-  </a>
   
 </li>
       
@@ -907,7 +916,7 @@
                     <li class="md-nav__item">
                       <div class="md-nav__link">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
-                        <time datetime="2026-05-27 00:00:00+00:00" class="md-ellipsis">May 27, 2026</time>
+                        <time datetime="2026-07-14 00:00:00+00:00" class="md-ellipsis">July 14, 2026</time>
                       </div>
                     </li>
                     
@@ -956,26 +965,47 @@
   
 
 
-<h1 id="release-v180">Release v1.8.0<a class="headerlink" href="#release-v180" title="Permanent link">&para;</a></h1>
-<p>v1.8.0 improves error visibility, adds a configurable overdue-chore schedule setting, and fixes several UI consistency issues across mobile and settings pages.</p>
+<h1 id="release-v190">Release v1.9.0<a class="headerlink" href="#release-v190" title="Permanent link">&para;</a></h1>
+<p>v1.9.0 introduces the notification system: Chores Web now tells each person when
+their chores become due — in the web app through an in-app bell and toast, and on
+Android through system notifications — with per-type preferences and an offline
+alert on mobile.</p>
 <!-- more -->
 
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
-<h3 id="chore-settings">Chore Settings<a class="headerlink" href="#chore-settings" title="Permanent link">&para;</a></h3>
+<h3 id="notifications">Notifications<a class="headerlink" href="#notifications" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Overdue-chore transition hour is now configurable — set the hour of day when scheduled chores become overdue via the new <code>due_time_hour</code> setting (#205)</li>
+<li>Chore-due notifications — when a chore becomes due, Chores Web generates a
+  notification for each person the chore is relevant to, at the household's
+  configured due-time transition</li>
+<li>Server-owned delivery, acknowledgement, and automatic dismissal — a
+  notification is delivered on first fetch, stays consistent across devices, and
+  is cleared automatically once its chore is no longer due, so there is nothing
+  to clean up by hand</li>
 </ul>
-<h3 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h3>
+<h3 id="web-app">Web App<a class="headerlink" href="#web-app" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Structured error handling added across backend routers and services — errors are logged with proper HTTP status codes instead of silently failing (#195)</li>
+<li>In-app notification surfacing — a top-bar bell with an unread badge, a toast
+  when new notifications arrive, and a notification log where items can be
+  acknowledged</li>
 </ul>
-<h2 id="bug-fixes">Bug Fixes<a class="headerlink" href="#bug-fixes" title="Permanent link">&para;</a></h2>
+<h3 id="android-app">Android App<a class="headerlink" href="#android-app" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Hidden backend errors now surface in the Log page UI — fetch failures show an error message instead of a blank page (#204)</li>
-<li>Mobile top navigation dropdown now opens downward — the UserAvatarMenu no longer clips off-screen on small viewports (#216)</li>
-<li>Settings sidebar HR now aligns with the heading and nav links — consistent left-edge alignment across all sidebar elements (#199)</li>
-<li>Sidebar state is restored on viewport resize — the sidebar remembers your desktop preference and auto-closes on mobile instead of getting stuck (#181)</li>
+<li>System notifications via background polling — the Android app polls the server
+  with WorkManager and posts due chores as native system notifications (no
+  push/FCM required)</li>
+<li>Configurable poll interval — tune how often the app checks for new
+  notifications from the app's settings</li>
+<li>"Not connected in X days" alert — a local reminder that fires when the app
+  hasn't reached the server recently, with a configurable threshold</li>
 </ul>
+<h3 id="preferences">Preferences<a class="headerlink" href="#preferences" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Per-type notification preferences — enable or disable the chore-due
+  notification type from either the web or Android settings; types are enabled by
+  default</li>
+</ul>
+<p>See the <a href="../../user-guide/notifications/">Notifications guide</a> for full details.</p>
 
 
 

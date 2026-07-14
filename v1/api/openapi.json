@@ -2758,6 +2758,230 @@
         }
       }
     },
+    "/v1/notifications/preferences": {
+      "get": {
+        "tags": [
+          "notifications"
+        ],
+        "summary": "Get Preferences",
+        "description": "Return the caller's per-type enablement map.\n\nEvery known type is present; a type with no stored row is ``true``\n(absent = enabled).",
+        "operationId": "get_preferences_v1_notifications_preferences_get",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationPreferencesOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "notifications"
+        ],
+        "summary": "Update Preferences",
+        "description": "Upsert the caller's preference rows and return the resulting map.\n\nKeys naming unknown types are ignored; the returned map always covers\nevery known type.",
+        "operationId": "update_preferences_v1_notifications_preferences_put",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotificationPreferencesUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationPreferencesOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/notifications": {
+      "get": {
+        "tags": [
+          "notifications"
+        ],
+        "summary": "List Notifications",
+        "description": "Return the caller's notifications, newest first.\n\nMarks delivery: the first time a notification is returned, its\n``delivered_at`` is set to now and committed in the same request. Already\ndelivered rows keep their original ``delivered_at``.",
+        "operationId": "list_notifications_v1_notifications_get",
+        "parameters": [
+          {
+            "name": "since",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Only notifications created strictly after this time.",
+              "title": "Since"
+            },
+            "description": "Only notifications created strictly after this time."
+          },
+          {
+            "name": "include_dismissed",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "Include dismissed (but delivered) rows too. Pre-dismissed rows (dismissed before delivery) are never returned in either mode.",
+              "default": false,
+              "title": "Include Dismissed"
+            },
+            "description": "Include dismissed (but delivered) rows too. Pre-dismissed rows (dismissed before delivery) are never returned in either mode."
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NotificationOut"
+                  },
+                  "title": "Response List Notifications V1 Notifications Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/notifications/{id}/ack": {
+      "post": {
+        "tags": [
+          "notifications"
+        ],
+        "summary": "Acknowledge Notification",
+        "description": "Acknowledge the caller's notification and return it.\n\nIdempotent: an already-acknowledged notification keeps its original\n``acknowledged_at``. Returns 404 both when the notification does not exist\nand when it belongs to another person (existence is never leaked via 403).",
+        "operationId": "acknowledge_notification_v1_notifications__id__ack_post",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/status/db-status": {
       "get": {
         "tags": [
@@ -2790,6 +3014,25 @@
             "content": {
               "application/json": {
                 "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/version": {
+      "get": {
+        "summary": "Get Version",
+        "description": "Public, unauthenticated backend self-version check.\n\nSame trust tier as /health \u2014 no Authorization required. Used by\nchores-web-frontend / chores-web-android to show \"Backend version\" on\ntheir About screens; a real \"not yet checked\" state (null\nlatest_version/checked_at) is a normal response here, distinct from this\nroute not existing at all (old backends predating this endpoint).",
+        "operationId": "get_version_version_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VersionOut"
+                }
               }
             }
           }
@@ -3581,6 +3824,108 @@
         ],
         "title": "LoginResponse"
       },
+      "NotificationOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "person_id": {
+            "type": "integer",
+            "title": "Person Id"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "chore_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chore Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "body": {
+            "type": "string",
+            "title": "Body"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "delivered_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delivered At"
+          },
+          "acknowledged_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Acknowledged At"
+          },
+          "dismissed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dismissed At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "person_id",
+          "type",
+          "title",
+          "body",
+          "created_at"
+        ],
+        "title": "NotificationOut"
+      },
+      "NotificationPreferencesOut": {
+        "additionalProperties": {
+          "type": "boolean"
+        },
+        "type": "object",
+        "title": "NotificationPreferencesOut",
+        "description": "Per-type enablement map, e.g. ``{\"chore_due\": true}``.\n\nEvery known notification type is present; a type with no stored\nNotificationPreference row is reported as ``true`` (absent = enabled)."
+      },
+      "NotificationPreferencesUpdate": {
+        "additionalProperties": {
+          "type": "boolean"
+        },
+        "type": "object",
+        "title": "NotificationPreferencesUpdate",
+        "description": "Per-type enablement map accepted by ``PUT /notifications/preferences``.\n\nSame shape as :class:`NotificationPreferencesOut`; keys naming unknown\ntypes are ignored."
+      },
       "PasswordChangeRequest": {
         "properties": {
           "old_password": {
@@ -4350,6 +4695,48 @@
           "type"
         ],
         "title": "ValidationError"
+      },
+      "VersionOut": {
+        "properties": {
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "latest_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latest Version"
+          },
+          "update_available": {
+            "type": "boolean",
+            "title": "Update Available",
+            "default": false
+          },
+          "checked_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Checked At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "version"
+        ],
+        "title": "VersionOut",
+        "description": "Public, unauthenticated self-version payload for GET /version.\n\nSame trust tier as /health \u2014 no admin/auth-gated fields (check_enabled,\ncheck_interval_hours) are exposed here, unlike UpdateCheckStatus."
       }
     }
   }

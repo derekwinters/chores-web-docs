@@ -58,6 +58,28 @@ Admins can configure:
 - System name/title (optional)
 - Custom theme colors
 
+### Notifications
+
+Chores Web notifies each person when a chore becomes due (see the
+[Notifications](notifications.md) guide for the full user-facing behavior).
+The generation of these chore-due notifications is driven by the same
+household schedule settings admins already manage:
+
+- **`due_time_hour`** – the hour of day when scheduled chores transition to
+  due/overdue. Chore-due notifications are generated at this transition, so
+  changing `due_time_hour` also changes when people are notified.
+- **`due_soon_days`** – the window used to consider a chore "due soon." Widening
+  or narrowing this window changes which chores are surfaced as due, and
+  therefore which ones generate notifications.
+
+There is no separate notification schedule to configure — tuning these two
+settings is how admins control notification timing.
+
+**Stale notifications clean up themselves.** When a chore is completed, skipped,
+or otherwise no longer due, any unacknowledged notification for it is dismissed
+automatically by the server. Admins do not need to purge, reset, or otherwise
+maintain a notification queue — there is no manual cleanup step.
+
 ### Unsaved Changes
 
 Settings pages track unsaved changes:

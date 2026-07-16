@@ -138,21 +138,90 @@ acquisition, renewal, and reloading nginx after each renewal.
    certbot renew --dry-run
    ```
 
+## Alternative: Traefik
+
+If you already run [Traefik](https://traefik.io/) as your cluster or host
+edge, it can terminate TLS and acquire Let's Encrypt certificates
+automatically via its ACME resolver — no certbot and no manual renewal, like
+Caddy. This path is not smoke-tested here, so treat the snippet below as a
+starting point rather than a drop-in overlay.
+
+Point a router at the `frontend` service with an ACME (Let's Encrypt)
+certificate resolver and let Traefik handle 80 → 443 redirection. Using
+container labels on the `frontend` service:
+
+```yaml title="docker-compose.https.yml (Traefik variant)"
+services:
+  traefik:
+    image: traefik:v3
+    command:
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.le.acme.httpchallenge=true"
+      - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.le.acme.email=you@example.com"
+      - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - chores-traefik-acme:/letsencrypt
+
+  frontend:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.chores.rule=Host(`chores.example.com`)"
+      - "traefik.http.routers.chores.entrypoints=websecure"
+      - "traefik.http.routers.chores.tls.certresolver=le"
+      - "traefik.http.services.chores.loadbalancer.server.port=80"
+
+volumes:
+  chores-traefik-acme:
+```
+
+Traefik sets `X-Forwarded-Proto` / `X-Forwarded-For` on the proxied request
+by default, so the forwarded-header behaviour matches the Caddy and nginx
+examples above.
+
 ## Forwarded headers
 
-Both examples above set `X-Forwarded-Proto`, `X-Forwarded-For`, and `Host`
-on the proxied request, which is the standard way to tell the app it's
-being served over HTTPS even though the connection to it is plain HTTP.
+All three examples above set `X-Forwarded-Proto`, `X-Forwarded-For`, and
+`Host` on the proxied request, which is the standard way to tell an upstream
+it's being served over HTTPS even though the connection to it is plain HTTP.
 
-!!! warning "Unverified against application code"
-    Whether the frontend and backend containers currently *read and act on*
-    these headers — for example, generating `https://` URLs, treating the
-    connection as secure for cookie flags, or trusting `X-Forwarded-For`
-    for logging — has not been verified against the `chores-web-frontend`
-    and `chores-web-backend` source. If you hit mixed-content warnings,
-    incorrect redirects, or cookies not being marked `Secure` once you're
-    behind TLS, that's the first place to look; please open an issue in the
-    relevant repository if you find gaps.
+## Are application changes required?
+
+**No.** Edge TLS termination is fully transparent to the current stack — you
+can put any of the proxies above in front of it without changing the
+`frontend` or `backend` images:
+
+- **No mixed content.** The frontend talks to the API over the relative path
+  `/api/v1` (never an absolute `http://` URL), so every API call inherits the
+  page's `https://` scheme automatically once the proxy is in front.
+- **No `Secure`-cookie concern.** Authentication uses a bearer token sent in
+  the `Authorization` header and held in the browser's `localStorage`, not a
+  session cookie — so there are no cookie `Secure` / `SameSite` flags that
+  need the app to know it's behind TLS.
+- **The backend is origin-agnostic.** It is reached only through the
+  frontend's same-origin `/api/` proxy, and it neither emits absolute URLs
+  nor sets cookies, so it needs no `X-Forwarded-*` awareness to work
+  correctly behind the proxy.
+
+!!! note "Optional backend hardening (a separate, not-yet-filed follow-up)"
+    The backend runs `uvicorn` **without** `--proxy-headers`, so it currently
+    *ignores* `X-Forwarded-Proto` / `X-Forwarded-For`: from its point of view
+    every request arrives as plain HTTP from the frontend container, and the
+    "client" IP is the proxy, not the real caller. Nothing in the app depends
+    on that today, so it is not a blocker. It would only matter if a future
+    feature needs the real client scheme or IP (for example, recording the
+    caller's address in the authentication log). If that day comes, enabling
+    `--proxy-headers` (and trusting the proxy) is a **`chores-web-backend`**
+    change, and any frontend-side URL/scheme handling would be a
+    **`chores-web-frontend`** change — both out of scope for this
+    user-facing docs repo, and each should be filed as its own issue in the
+    respective code repository rather than fixed here.
 
 ## Updating CORS
 

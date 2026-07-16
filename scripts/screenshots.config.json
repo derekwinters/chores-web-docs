@@ -1,0 +1,24 @@
+{
+  "$comment": "Single source of truth for the documentation screenshot pipeline. Consumed by capture_screenshots.mjs (which routes it drives) and wire_screenshots.py (which doc pages reference which PNG). Keep 'name' values stable — they are the committed PNG filenames referenced from the docs.",
+  "frontendUrl": "http://localhost:3000",
+  "admin": {
+    "username": "admin",
+    "password": "adminpass123"
+  },
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "outputDir": "docs/assets/screenshots",
+  "captures": [
+    { "name": "board", "route": "/", "title": "The Board (dashboard)" },
+    { "name": "chores", "route": "/chores", "title": "Chores list" },
+    { "name": "users", "route": "/users", "title": "User management" },
+    { "name": "log", "route": "/log", "title": "Activity log" },
+    { "name": "settings", "route": "/settings/general", "title": "Settings" }
+  ],
+  "wiring": [
+    { "page": "docs/user-guide/getting-started.md", "screenshots": ["board", "chores", "log"] },
+    { "page": "docs/user-guide/admin.md", "screenshots": ["users", "settings"] }
+  ]
+}

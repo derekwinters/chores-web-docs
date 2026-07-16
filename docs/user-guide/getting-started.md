@@ -32,6 +32,12 @@ Chores Web is a household chore management app that helps families and roommates
 3. Click **Login**
 4. You'll see the **Dashboard** with an overview of your chores and points
 
+<!-- The images below are generated and committed by the "Documentation Screenshots"
+     workflow (.github/workflows/screenshots.yml). Do not edit the block by hand —
+     it is rewritten by scripts/wire_screenshots.py. -->
+<!-- screenshots:auto:START -->
+<!-- screenshots:auto:END -->
+
 ### Dashboard Overview
 
 The main dashboard shows:

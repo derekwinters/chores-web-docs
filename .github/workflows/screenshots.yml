@@ -1,0 +1,106 @@
+name: Documentation Screenshots
+
+# Regenerate the documentation screenshots on demand. This boots the same
+# published compose stack that the docs smoke test uses, seeds deterministic
+# demo data through the API, captures each main sidebar page with Playwright,
+# wires the PNGs into the doc pages, and commits the result back to the branch
+# the workflow was dispatched on.
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Branch to capture on and commit back to"
+        required: false
+        default: main
+
+permissions:
+  contents: write
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    env:
+      # Ephemeral secret for the throwaway stack. Prefer a repo secret if set,
+      # otherwise generate a random one for this run.
+      JWT_SECRET: ${{ secrets.SCREENSHOTS_JWT_SECRET }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Generate a JWT secret if none is configured
+        run: |
+          if [ -z "$JWT_SECRET" ]; then
+            echo "JWT_SECRET=$(openssl rand -hex 32)" >> "$GITHUB_ENV"
+          fi
+
+      - name: Boot the published compose stack
+        working-directory: docs/deployment
+        run: docker compose up -d --wait --wait-timeout 180
+
+      - name: Assert health endpoints
+        run: |
+          curl -fsS http://localhost:8000/health
+          for i in $(seq 1 15); do
+            curl -fsS -o /dev/null http://localhost:3000/ && break
+            [ "$i" -eq 15 ] && { echo "frontend never came up"; exit 1; }
+            sleep 2
+          done
+          curl -fsS http://localhost:3000/api/health
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Seed deterministic demo data
+        run: |
+          pip install -r scripts/requirements.txt
+          python scripts/seed_demo_data.py --base-url http://localhost:8000
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Playwright (Chromium)
+        working-directory: scripts
+        run: |
+          npm install
+          npx playwright install --with-deps chromium
+
+      - name: Capture screenshots
+        working-directory: scripts
+        run: node capture_screenshots.mjs
+
+      - name: Wire screenshots into the docs
+        run: python scripts/wire_screenshots.py
+
+      - name: Verify strict docs build with the new screenshots
+        run: |
+          pip install -r docs/requirements.txt
+          mkdocs build --strict
+
+      - name: Collect stack logs on failure
+        if: failure()
+        working-directory: docs/deployment
+        run: |
+          docker compose ps -a
+          docker compose logs
+
+      - name: Commit regenerated screenshots
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/assets/screenshots docs/user-guide
+          if git diff --cached --quiet; then
+            echo "No screenshot changes to commit."
+          else
+            git commit -m "docs: regenerate documentation screenshots"
+            git push origin HEAD:${{ inputs.ref }}
+          fi
+
+      - name: Tear down the stack
+        if: always()
+        working-directory: docs/deployment
+        run: docker compose down -v

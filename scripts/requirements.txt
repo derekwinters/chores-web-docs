@@ -1,0 +1,2 @@
+# Dependencies for the documentation screenshot seed script (seed_demo_data.py).
+httpx>=0.27

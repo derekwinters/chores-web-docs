@@ -1,0 +1,13 @@
+{
+  "name": "chores-web-docs-screenshots",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Playwright capture tooling for chores-web documentation screenshots.",
+  "scripts": {
+    "capture": "node capture_screenshots.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.48.0"
+  }
+}

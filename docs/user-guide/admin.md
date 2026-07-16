@@ -4,6 +4,10 @@
      workflow (.github/workflows/screenshots.yml). Do not edit the block by hand —
      it is rewritten by scripts/wire_screenshots.py. -->
 <!-- screenshots:auto:START -->
+
+![User management](../assets/screenshots/users.png)
+
+![Settings](../assets/screenshots/settings.png)
 <!-- screenshots:auto:END -->
 
 ## Admin Features

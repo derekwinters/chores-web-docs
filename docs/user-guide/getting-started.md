@@ -36,6 +36,12 @@ Chores Web is a household chore management app that helps families and roommates
      workflow (.github/workflows/screenshots.yml). Do not edit the block by hand —
      it is rewritten by scripts/wire_screenshots.py. -->
 <!-- screenshots:auto:START -->
+
+![The Board (dashboard)](../assets/screenshots/board.png)
+
+![Chores list](../assets/screenshots/chores.png)
+
+![Activity log](../assets/screenshots/log.png)
 <!-- screenshots:auto:END -->
 
 ### Dashboard Overview

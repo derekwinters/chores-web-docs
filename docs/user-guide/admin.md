@@ -1,5 +1,11 @@
 # Admin Features & Settings
 
+<!-- The images below are generated and committed by the "Documentation Screenshots"
+     workflow (.github/workflows/screenshots.yml). Do not edit the block by hand —
+     it is rewritten by scripts/wire_screenshots.py. -->
+<!-- screenshots:auto:START -->
+<!-- screenshots:auto:END -->
+
 ## Admin Features
 
 ### Managing Users

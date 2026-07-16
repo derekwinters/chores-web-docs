@@ -1,0 +1,5 @@
+# Generated screenshots land here.
+#
+# PNGs in this directory are produced by the "Documentation Screenshots"
+# workflow (.github/workflows/screenshots.yml) and committed back to the repo.
+# This placeholder keeps the directory present in git before the first run.

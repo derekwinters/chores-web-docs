@@ -830,10 +830,32 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#alternative-traefik" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative: Traefik
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#forwarded-headers" class="md-nav__link">
     <span class="md-ellipsis">
       
         Forwarded headers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#are-application-changes-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Are application changes required?
       
     </span>
   </a>
@@ -1011,10 +1033,32 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#alternative-traefik" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative: Traefik
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#forwarded-headers" class="md-nav__link">
     <span class="md-ellipsis">
       
         Forwarded headers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#are-application-changes-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Are application changes required?
       
     </span>
   </a>
@@ -1213,20 +1257,82 @@ acquisition, renewal, and reloading nginx after each renewal.</p>
 <p>Verify the renewal path works without waiting 90 days:</p>
 <div class="highlight"><pre><span></span><code>certbot<span class="w"> </span>renew<span class="w"> </span>--dry-run
 </code></pre></div>
+<h2 id="alternative-traefik">Alternative: Traefik<a class="headerlink" href="#alternative-traefik" title="Permanent link">&para;</a></h2>
+<p>If you already run <a href="https://traefik.io/">Traefik</a> as your cluster or host
+edge, it can terminate TLS and acquire Let's Encrypt certificates
+automatically via its ACME resolver — no certbot and no manual renewal, like
+Caddy. This path is not smoke-tested here, so treat the snippet below as a
+starting point rather than a drop-in overlay.</p>
+<p>Point a router at the <code>frontend</code> service with an ACME (Let's Encrypt)
+certificate resolver and let Traefik handle 80 → 443 redirection. Using
+container labels on the <code>frontend</code> service:</p>
+<div class="highlight"><span class="filename">docker-compose.https.yml (Traefik variant)</span><pre><span></span><code><span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">traefik</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">traefik:v3</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;--providers.docker=true&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;--entrypoints.web.address=:80&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;--entrypoints.websecure.address=:443&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;--certificatesresolvers.le.acme.httpchallenge=true&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;--certificatesresolvers.le.acme.httpchallenge.entrypoint=web&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;--certificatesresolvers.le.acme.email=you@example.com&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json&quot;</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;80:80&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;443:443&quot;</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/run/docker.sock:/var/run/docker.sock:ro</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chores-traefik-acme:/letsencrypt</span>
+
+<span class="w">  </span><span class="nt">frontend</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;traefik.enable=true&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;traefik.http.routers.chores.rule=Host(`chores.example.com`)&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;traefik.http.routers.chores.entrypoints=websecure&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;traefik.http.routers.chores.tls.certresolver=le&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;traefik.http.services.chores.loadbalancer.server.port=80&quot;</span>
+
+<span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">chores-traefik-acme</span><span class="p">:</span>
+</code></pre></div>
+<p>Traefik sets <code>X-Forwarded-Proto</code> / <code>X-Forwarded-For</code> on the proxied request
+by default, so the forwarded-header behaviour matches the Caddy and nginx
+examples above.</p>
 <h2 id="forwarded-headers">Forwarded headers<a class="headerlink" href="#forwarded-headers" title="Permanent link">&para;</a></h2>
-<p>Both examples above set <code>X-Forwarded-Proto</code>, <code>X-Forwarded-For</code>, and <code>Host</code>
-on the proxied request, which is the standard way to tell the app it's
-being served over HTTPS even though the connection to it is plain HTTP.</p>
-<div class="admonition warning">
-<p class="admonition-title">Unverified against application code</p>
-<p>Whether the frontend and backend containers currently <em>read and act on</em>
-these headers — for example, generating <code>https://</code> URLs, treating the
-connection as secure for cookie flags, or trusting <code>X-Forwarded-For</code>
-for logging — has not been verified against the <code>chores-web-frontend</code>
-and <code>chores-web-backend</code> source. If you hit mixed-content warnings,
-incorrect redirects, or cookies not being marked <code>Secure</code> once you're
-behind TLS, that's the first place to look; please open an issue in the
-relevant repository if you find gaps.</p>
+<p>All three examples above set <code>X-Forwarded-Proto</code>, <code>X-Forwarded-For</code>, and
+<code>Host</code> on the proxied request, which is the standard way to tell an upstream
+it's being served over HTTPS even though the connection to it is plain HTTP.</p>
+<h2 id="are-application-changes-required">Are application changes required?<a class="headerlink" href="#are-application-changes-required" title="Permanent link">&para;</a></h2>
+<p><strong>No.</strong> Edge TLS termination is fully transparent to the current stack — you
+can put any of the proxies above in front of it without changing the
+<code>frontend</code> or <code>backend</code> images:</p>
+<ul>
+<li><strong>No mixed content.</strong> The frontend talks to the API over the relative path
+  <code>/api/v1</code> (never an absolute <code>http://</code> URL), so every API call inherits the
+  page's <code>https://</code> scheme automatically once the proxy is in front.</li>
+<li><strong>No <code>Secure</code>-cookie concern.</strong> Authentication uses a bearer token sent in
+  the <code>Authorization</code> header and held in the browser's <code>localStorage</code>, not a
+  session cookie — so there are no cookie <code>Secure</code> / <code>SameSite</code> flags that
+  need the app to know it's behind TLS.</li>
+<li><strong>The backend is origin-agnostic.</strong> It is reached only through the
+  frontend's same-origin <code>/api/</code> proxy, and it neither emits absolute URLs
+  nor sets cookies, so it needs no <code>X-Forwarded-*</code> awareness to work
+  correctly behind the proxy.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Optional backend hardening (a separate, not-yet-filed follow-up)</p>
+<p>The backend runs <code>uvicorn</code> <strong>without</strong> <code>--proxy-headers</code>, so it currently
+<em>ignores</em> <code>X-Forwarded-Proto</code> / <code>X-Forwarded-For</code>: from its point of view
+every request arrives as plain HTTP from the frontend container, and the
+"client" IP is the proxy, not the real caller. Nothing in the app depends
+on that today, so it is not a blocker. It would only matter if a future
+feature needs the real client scheme or IP (for example, recording the
+caller's address in the authentication log). If that day comes, enabling
+<code>--proxy-headers</code> (and trusting the proxy) is a <strong><code>chores-web-backend</code></strong>
+change, and any frontend-side URL/scheme handling would be a
+<strong><code>chores-web-frontend</code></strong> change — both out of scope for this
+user-facing docs repo, and each should be filed as its own issue in the
+respective code repository rather than fixed here.</p>
 </div>
 <h2 id="updating-cors">Updating CORS<a class="headerlink" href="#updating-cors" title="Permanent link">&para;</a></h2>
 <p>If the backend is reachable directly (not only through the frontend's

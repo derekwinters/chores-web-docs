@@ -49,9 +49,10 @@ jobs:
           curl -fsS http://localhost:3000/api/health
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: derekwinters/chores-web-actions/actions/setup-python@19729c4d6ee3366dc32f4bd8946cb8ac7f6b05e5
         with:
           python-version: "3.11"
+          requirements-path: scripts/requirements.txt
 
       - name: Seed deterministic demo data
         run: |
@@ -59,9 +60,10 @@ jobs:
           python scripts/seed_demo_data.py --base-url http://localhost:8000
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: derekwinters/chores-web-actions/actions/setup-node@19729c4d6ee3366dc32f4bd8946cb8ac7f6b05e5
         with:
           node-version: "20"
+          lockfile-path: scripts/package.json
 
       - name: Install Playwright (Chromium)
         working-directory: scripts

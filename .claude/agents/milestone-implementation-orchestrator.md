@@ -6,12 +6,12 @@ type: agent
 
 # Milestone Implementation Orchestrator Agent
 
-Implements all issues in a GitHub milestone sequentially on a shared branch, culminating in a single milestone PR.
+Implements all issues in a GitHub milestone sequentially on a shared branch, culminating in a single PR suitable for Release-Please.
 
 ## Invocation
 
 ```
-@milestone-implementation-orchestrator https://github.com/derekwinters/chores-web-docs/milestone/N
+@milestone-implementation-orchestrator https://github.com/derekwinters/chores-web-backend/milestone/N
 ```
 
 ## IMPORTANT: Display Workflow Diagram on Every State Transition
@@ -110,7 +110,7 @@ CI: 4/6 passing  (fix attempt 1/3)
 
 ## Version Extraction
 
-From milestone title, extract semver string for **display purposes only** (PR title, milestone name in output). This is never treated as an explicit instruction to cut a release at that version — see Versioning below.
+From milestone title, extract semver string for **display purposes only** (PR title, milestone name in output). This is never treated as an explicit instruction to cut a release at that version — see Release-Please below.
 - "v1.9.0" → "1.9.0"
 - "Release 2.0.0" → "2.0.0"
 - "Milestone 1.8.0" → "1.8.0"
@@ -164,17 +164,18 @@ git push -u origin claude/milestone-<milestone-number>-<randomid>
 
 `<randomid>` is 6 lowercase alphanumeric characters (e.g. `claude/milestone-7-mzvlv8`). This branch is cut fresh from `main` and its lifecycle (creation, the setup commit, and every push) is owned exclusively by this orchestrator — see Branch Ownership below.
 
-## Versioning
+## Release-Please
 
-**This repo has no release-please and no version-cutting commit.** Docs
-versions track the API major version (`v1`, `v2`, ...) and are published with
-`mike`, driven by the `API_VERSION` file — not by commit history. A version
-string appearing in the milestone title, an issue title, or an issue body is
-display metadata only (see Version Extraction); it is never treated as an
-instruction to bump `API_VERSION` or cut a docs version. Changing the docs
-version tree is a deliberate `API_VERSION` bump made in its own dedicated PR,
-outside this milestone flow, so this orchestrator makes no release/version
-commit of any kind.
+**No `Release-As` commit by default.** A version-cutting commit is made **only** when the invoking user explicitly instructs that a specific version MUST be set. A version string appearing in the milestone title, an issue title, or an issue body is **not** such an instruction — it is display metadata only (see Version Extraction). Absent an explicit instruction, Release-Please computes the version from the conventional commits merged on this PR, as designed. If explicitly instructed:
+
+```bash
+git commit --allow-empty -m "$(cat <<'EOF'
+chore: release <version>
+
+Release-As: <version>
+EOF
+)"
+```
 
 ## PR Body Template
 
@@ -241,7 +242,7 @@ CI is gated **inside the per-issue loop** (state [6]), not only at the end — a
   ```
   RECHECK: <branch> <pr_number> in ~N minutes
   ```
-  Default recheck delay: ~5 minutes (typical CI duration for this repo's `mkdocs build --strict`) — a default, not a hard rule. The parent session owns the timer and re-prompts this orchestrator (or resumes it) when it fires; on wake, this orchestrator reads the PR check results for the current head (a lightweight single status read, not a 40-poll loop).
+  Default recheck delay: ~10 minutes (typical CI duration for this repo's pytest + contract-check run) — a default, not a hard rule. The parent session owns the timer and re-prompts this orchestrator (or resumes it) when it fires; on wake, this orchestrator reads the PR check results for the current head (a lightweight single status read, not a 40-poll loop).
 - **On failure**: do not fix inline and do not by default re-task the busy implementation agent. Spawn a dedicated **resolution agent** (fresh context) with: failing check names, log excerpts, branch name, and the same "what may be fixed autonomously vs HALT" constraint set used in the final CI Watch below. The resolution agent commits `fix:` commits to the same branch, then this orchestrator arms another recheck.
 - **Budget**: max 3 fix attempts per issue (shared with the final ci-watch fix loop below). On attempt 3 failure: HALT with the standard report; do not attempt a 4th fix.
 - State [8] `ci-watch` remains as a final safety net over the whole PR — it should be trivially green given per-issue gating already occurred.
@@ -276,15 +277,15 @@ On attempt 3 failure: HALT with the full CI_WATCH_RESULT. Do not attempt a 4th f
 
 - Missing env vars in CI workflow steps
 - Wrong tool install commands (binary names, asset URLs, paths)
-- `mkdocs build --strict` failures caused by content introduced in this milestone
-- Broken nav references or dead internal links in new/edited pages
-- Snippet `check_paths` errors from moved or renamed included files
+- Test failures caused by code introduced in this milestone
+- Missing dependency declarations (e.g. an import with no matching package)
+- API contract drift where the golden snapshot in chores-web-docs needs regenerating for a non-breaking change
 
 ### What requires HALT (do not attempt to fix autonomously)
 
 - Flaky/infrastructure failures (runner OOM, network timeouts, GitHub Actions outage)
-- Strict-build failures in pages predating this milestone (not caused by these changes)
-- `oasdiff` API-contract check failures requiring an `API_VERSION` / `openapi.json` decision
+- Test failures in code predating this milestone (not caused by these changes)
+- Security scan failures requiring policy decisions
 - Failures in checks not present before this PR
 
 ### On TIMEOUT
@@ -322,7 +323,7 @@ Manual steps: resolve issue on branch, then re-invoke from #<N>
 - Each issue gets its own conventional commit(s) via the issue orchestrator
 - PR auto-closes all milestone issues when merged (`Closes #N` list written up front in the PR body, per-issue/section checkboxes ticked as work completes)
 - `in-development` label removed per-issue by this orchestrator after each issue completes
-- No release/version commit: this repo has no release-please; docs versions track `API_VERSION` and are published with `mike` in a separate deliberate PR
+- No `Release-As` commit unless the invoking user explicitly instructs an exact version; Release-Please otherwise computes the version from conventional commits on merge
 - Safe to re-run from clean state; branch-already-exists check prevents duplicate work
 
 ## Related Agents & Skills

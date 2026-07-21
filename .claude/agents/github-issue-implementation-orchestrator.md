@@ -6,7 +6,7 @@ type: agent
 
 # GitHub Issue Implementation Orchestrator Agent
 
-Automated workflow coordinator for implementing GitHub issues end-to-end. Implements 12-state machine: validate, prepare, doc-pre, tdd-loop (draft→strict-build loop), test, build-verify, user-review, code-commit, doc-validate, reflect, finalize, complete.
+Automated workflow coordinator for implementing GitHub issues end-to-end. Implements 12-state machine: validate, prepare, doc-pre, TDD loop, test, build-verify, user-review, code-commit, doc-validate, reflect, finalize, complete.
 
 ## IMPORTANT: Display Workflow Diagram on Every State Transition
 
@@ -34,28 +34,28 @@ START
   ├─ Commit: `docs: update docs for #<N> pre-implementation`
   └─ Result: Doc changes committed
           ↓
-[4] tdd-loop — draft→strict-build loop (fully autonomous)
+[4] tdd-loop (fully autonomous)
   ├─ Read "Behaviors to Implement" checklist from grilling comment
   ├─ For each unchecked behavior:
-  │   ├─ Draft/edit the docs content for this behavior only
-  │   ├─ Run `mkdocs build --strict`
-  │   └─ Fix any strict-mode failures (broken nav refs, bad links,
-  │       snippet check_paths errors), then re-run until clean
+  │   ├─ RED: write failing test for this behavior only
+  │   ├─ GREEN: write minimum code to make test pass
+  │   └─ REFACTOR: clean up if needed, re-run tests
   ├─ Adaptive: minor deviations handled silently, note all deviations to carry forward to reflect
-  ├─ No per-behavior pauses — runs fully autonomously until all behaviors drafted
-  └─ Result: All behaviors drafted and building clean, deviations list ready
+  ├─ No per-cycle pauses — runs fully autonomously until all behaviors implemented
+  └─ Result: All behaviors implemented, deviations list ready
           ↓
 [5] test
   ├─ Call: /implementation-test
-  ├─ Run: `mkdocs build --strict` (the PR gate — this repo has no test suite)
+  ├─ Run: full test suite
   └─ Branch:
       ├─ PASS → Continue to [6]
       └─ FAIL → PAUSE, show errors, return to [4]
           ↓
 [6] build-verify
   ├─ Call: /implementation-verify <issue-number>
-  ├─ Re-runs `mkdocs build --strict` (verify reuses the strict build — no
-  │   second command) and shows a changed-files summary
+  ├─ Runs pytest, regenerates the OpenAPI schema and diffs it against the
+  │   chores-web-docs golden snapshot (flags contract drift), reminds about
+  │   Alembic migrations if app/models.py changed, shows changes summary
   └─ PAUSE: Awaits user approval
           ↓
 [7] user-review
@@ -109,18 +109,18 @@ GITHUB ISSUE IMPLEMENTATION WORKFLOW
 ====================================
 
 ┌──────────┐  ┌─────────┐  ┌─────────┐  ┌──────────┐  ┌──────┐  ┌────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐
-│ Validate ├─▶│ Prepare ├─▶│ Doc Pre ├─▶│Draft Loop├─▶│ Test ├─▶│Build   ├─▶│User Rev. ├─▶│Code Cmt  ├─▶│Doc Valid ├─▶│ Reflect  ├─▶│ Finalize ├─▶│ Complete │
+│ Validate ├─▶│ Prepare ├─▶│ Doc Pre ├─▶│ TDD Loop ├─▶│ Test ├─▶│Build   ├─▶│User Rev. ├─▶│Code Cmt  ├─▶│Doc Valid ├─▶│ Reflect  ├─▶│ Finalize ├─▶│ Complete │
 └──────────┘  └─────────┘  └─────────┘  └──────────┘  └──────┘  └────────┘  └──────────┘  └──────────┘  └──────────┘  └──────────┘  └──────────┘  └──────────┘
 ```
 
-Example at Draft Loop stage:
+Example at TDD Loop stage:
 
 ```
 GITHUB ISSUE IMPLEMENTATION WORKFLOW
 ====================================
 
 ┌──────────┐  ┌─────────┐  ┌─────────┐  ┏━━━━━━━━━━┓  ┌──────┐  ┌────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐
-│ Validate ├─▶│ Prepare ├─▶│ Doc Pre ├─▶┃Draft Loop┃─▶│ Test ├─▶│Build   ├─▶│User Rev. ├─▶│Code Cmt  ├─▶│Doc Valid ├─▶│ Reflect  ├─▶│ Finalize ├─▶│ Complete │
+│ Validate ├─▶│ Prepare ├─▶│ Doc Pre ├─▶┃ TDD Loop ┃─▶│ Test ├─▶│Build   ├─▶│User Rev. ├─▶│Code Cmt  ├─▶│Doc Valid ├─▶│ Reflect  ├─▶│ Finalize ├─▶│ Complete │
 └──────────┘  └─────────┘  └─────────┘  ┗━━━━━━━━━━┛  └──────┘  └────────┘  └──────────┘  └──────────┘  └──────────┘  └──────────┘  └──────────┘  └──────────┘
 ```
 
@@ -128,26 +128,21 @@ Also display issue context at each state:
 
 ```
 Issue #263: Agent and Skill Refresh
-State: [4] Draft Loop
+State: [4] TDD Loop
 Progress: 4/12
-Branch: docs-issue-263
+Branch: feat-issue-263
 Behaviors remaining: 6/10
 ```
 
-## Draft→Strict-Build Loop Details
+## TDD Loop Details
 
-The draft→strict-build loop is the core of the implementation stage. This repo
-has no test suite, so behaviors are exercised by drafting docs content and
-gating on `mkdocs build --strict`. It runs fully autonomously:
+The TDD loop is the core of the implementation stage. It runs fully autonomously:
 
 1. Parse the `### Behaviors to Implement` checklist from the grilling comment
 2. For each `- [ ] Behavior (area: X)` item (in order):
-   - **Draft**: Write/edit the docs content (pages, nav entries, API reference,
-     blog) that satisfies this behavior.
-   - **Build**: Run `mkdocs build --strict`.
-   - **Fix**: Resolve any strict-mode failures (broken nav references, bad or
-     dangling links, snippet `check_paths` errors) and re-run until the build
-     is clean.
+   - **RED**: Write one failing test targeting this behavior. Run it, confirm it fails for the right reason.
+   - **GREEN**: Write the minimum production code to make the test pass. Run all tests, confirm green.
+   - **REFACTOR**: Clean up code if needed. Run tests again to confirm still green.
 3. Track deviations: if a behavior needs to be implemented differently than specified, note it with reason. Do not pause — proceed with best judgment and carry the deviation forward to reflect (state [10]), which composes the `## Deviations and Decisions` block for the PR body.
 4. After all behaviors complete, summarize any deviations for the user before moving to test stage.
 
@@ -155,8 +150,8 @@ gating on `mkdocs build --strict`. It runs fully autonomously:
 
 | Stage | Commit type | When |
 |-------|-------------|------|
-| doc-pre [3] | `docs:` | Before the draft loop, always |
-| code-commit [8] | `docs:/feat:/fix:/chore:` | After user approval |
+| doc-pre [3] | `docs:` | Before TDD, always |
+| code-commit [8] | `feat:/fix:/refactor:` | After user approval |
 | doc-validate [9] | `docs:` | After finalize, only if corrections needed |
 
 Reflect [10] and finalize [11] make **no commits** — reflect only composes text,
@@ -205,9 +200,10 @@ Resumable by checking branch state and git log.
 
 ### Output
 - Fully implemented issue with:
-  - All behaviors from grilling checklist drafted via the draft→strict-build loop
-  - Documentation drafted before the loop and verified/corrected after user approval
-  - `mkdocs build --strict` passing (the PR gate — this repo has no test suite)
+  - All behaviors from grilling checklist implemented via TDD
+  - Documentation drafted before coding and verified/corrected after user approval
+  - All tests passing
+  - API contract in sync with the chores-web-docs golden snapshot (drift flagged if not)
   - Two or three conventional commits (docs-pre, code, docs-post conditional)
   - Pull request created with auto-close markers
   - `in-development` label removed
@@ -216,9 +212,9 @@ Resumable by checking branch state and git log.
 1. **implementation-validate** — validate, label swap
 2. **implementation-prepare** — branch creation
 3. *(doc-pre)* — agent drafts + commits docs directly
-4. *(tdd-loop)* — agent runs the draft→strict-build loop autonomously
-5. **implementation-test** — `mkdocs build --strict`
-6. **implementation-verify** — re-runs `mkdocs build --strict` + changed-files summary
+4. *(tdd-loop)* — agent runs TDD autonomously
+5. **implementation-test** — full test suite
+6. **implementation-verify** — pytest + OpenAPI contract check + changes summary
 7. *User review pause*
 8. *(code-commit)* — agent commits code directly
 9. *(doc-validate)* — agent reconciles + commits if needed
@@ -231,16 +227,17 @@ Resumable by checking branch state and git log.
 - Missing grilling comment → ABORT with instruction to run `/grill-with-docs issue <N>` first
 - Missing `branch` input → ABORT — this agent never invents a branch name
 - Issue already closed → ABORT
-- Strict-build failures → PAUSE, show errors, return to tdd-loop
+- Test failures → PAUSE, show errors, return to TDD loop
+- Verification failures (test failures or API contract drift) → PAUSE, show errors
 - Git push failures → PAUSE, investigate
 
 ## Key Features
 
-**Grilling-driven drafting**: Behaviors checklist from grilling comment drives the draft→strict-build loop
+**Grilling-driven TDD**: Behaviors checklist from grilling comment drives the TDD loop
 
-**Fully autonomous drafting**: No per-behavior pauses — complete implementation before user review
+**Fully autonomous TDD**: No per-cycle pauses — complete implementation before user review
 
-**Two-phase docs**: `docs:` commit before drafting, verification/correction after approval
+**Two-phase docs**: `docs:` commit before coding, verification/correction after approval
 
 **Conventional commits throughout**: All commits and PR title follow conventional format
 
@@ -268,15 +265,15 @@ Resumable by checking branch state and git log.
 ### Supporting Skills
 - **implementation-validate**: Issue validation and label swap
 - **implementation-prepare**: Branch creation and setup
-- **implementation-test**: `mkdocs build --strict` verification
-- **implementation-verify**: re-runs the strict build and shows a changed-files summary
+- **implementation-test**: Test suite verification
+- **implementation-verify**: pytest + OpenAPI contract check and changes summary
 - **implementation-finalize**: Push and PR creation
 
 ## Notes
 
 - Agent idempotent: safe to re-run from failed state
 - All git operations happen on the caller-supplied `branch` — isolated `<type>-issue-<number>` in standalone mode, or the shared milestone branch in milestone mode
-- `mkdocs build --strict` must pass before user review pause
+- Tests must pass before user review pause
 - User has final approval before code commit and push
 - PR auto-closes issue when merged
 - Grilling comment is the source of truth for behaviors to implement

@@ -26,14 +26,13 @@ If a question can be answered by exploring the codebase, explore the codebase in
 
 ## Area Checklist
 
-Every grilling session MUST explicitly cover all four Impact Areas. Work through them as part of the conversation, not just in the output:
+Every grilling session MUST explicitly cover all of this repo's impact areas. Work through each one as part of the conversation, not just in the output:
 
-- [ ] **User Guide** — user-facing guide and deployment pages under `docs/`, their nav placement and cross-links
-- [ ] **API Contract** — `API_VERSION`, the golden `docs/api/openapi.json` snapshot, the API reference; whether the change is breaking (this repo OWNS the contract, checked by `oasdiff` in the backend CI)
-- [ ] **Blog** — the release blog: whether a post is needed and what it says
-- [ ] **Nav/mkdocs.yml** — `mkdocs.yml` navigation, mike version tree, plugins/markdown extensions, and whether the change still passes `mkdocs build --strict`
+**Impact areas:** guide, api, blog, nav
 
-If an area has no changes, state that explicitly ("Blog: no changes needed") so it's clear it was considered, not skipped.
+Treat each listed area as a checklist item, and consult this repo's `CLAUDE.md` for what that area entails and any rituals it carries (migrations, API-contract drift, versioning, etc.). Always include a **docs** review — README, architecture docs, `CONTEXT.md`, ADRs, and any other affected docs — even if it is not listed above.
+
+If an area has no changes, state that explicitly (e.g. "scheduler: no changes needed") so it's clear it was considered, not skipped.
 
 </what-to-do>
 
@@ -124,14 +123,11 @@ After the session is complete and the user confirms the decisions are captured, 
 ### Impact Areas
 | Area | Changes | Notes |
 |------|---------|-------|
-| User Guide | ... | ... |
-| API Contract | ... | ... |
-| Blog | ... | ... |
-| Nav/mkdocs.yml | ... | ... |
+| <one row per impact area for this repo: guide, api, blog, nav, plus Docs> | ... | ... |
 
 ### Behaviors to Implement
-- [ ] Behavior 1 (area: user guide)
-- [ ] Behavior 2 (area: nav/mkdocs.yml)
+- [ ] Behavior 1 (area: Backend)
+- [ ] Behavior 2 (area: API Contract)
 
 ### CONTEXT.md Updates
 - New terms added: ...

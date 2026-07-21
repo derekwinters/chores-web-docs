@@ -1,13 +1,12 @@
 ---
 name: commit
-description: Run the strict docs build and create a conventional commit with proper type and scope
+description: Run the repo's tests, then create a Conventional Commit with proper type and scope.
 ---
 
 # Commit Skill
 
-Validates that `mkdocs build --strict` passes, then creates a Conventional
-Commit with proper type/scope. This repo has no test suite — the strict build
-is the gate (see `CLAUDE.md`).
+Validates the suite passes, then creates a Conventional Commit with the right
+type/scope. Stage changes before invoking.
 
 ## Usage
 
@@ -17,13 +16,13 @@ is the gate (see `CLAUDE.md`).
 
 ## Flow
 
-1. Run the strict build (`mkdocs build --strict`)
-2. Stop if the build fails — report the strict-mode failures
-3. Review staged/unstaged changes
-4. Derive commit type and scope from changes
-5. Create commit using Conventional Commits format
+1. Run the test suite: `mkdocs build --strict`
+2. Stop if anything fails — report failures; do NOT commit.
+3. Review staged/unstaged changes (`git diff --staged`, `git status`).
+4. Derive commit type and scope from the actual changes.
+5. Create the commit in Conventional Commits format.
 
-## Commit Format
+## Format
 
 ```
 <type>(<scope>): <short description>
@@ -33,31 +32,18 @@ is the gate (see `CLAUDE.md`).
 
 ## Types
 
-Valid types (per `CLAUDE.md`): `feat`, `fix`, `chore`, `ci`, `docs`, `build`,
-`refactor`, `test`, `perf`, `revert`.
-
-- `docs` - documentation content (the natural type for most changes here)
-- `feat` - a new user-facing capability documented
-- `fix` - correcting wrong/misleading documented behavior
-- `chore` - tooling, `.claude/` machinery, deps
-- `ci` - CI/workflow changes
-- `build` - mkdocs/mike build configuration
-- `refactor` - restructuring docs without changing meaning
-- `perf` - performance-related content or config
-- `revert` - reverting a previous commit
+`feat` (feature) · `fix` (bug) · `refactor` · `test` · `docs` · `chore`
+(build/deps/tooling) · `style` · `perf` · `ci`. Pick by the actual semver impact
+of the change, not by what a PR title happens to say.
 
 ## Scopes
 
-- `guide` - user guide pages
-- `api` - API reference, `docs/api/openapi.json`, `API_VERSION`
-- `blog` - release blog posts
-- `nav` - `mkdocs.yml` navigation and site config
-- `agents` - `.claude/` agents and skills machinery
-- Use the most relevant scope
+Use the most relevant of: `guide, api, blog, nav, agents`.
+
+
 
 ## Rules
 
-- Subject line ≤72 characters, lowercase, no period
-- Imperative mood: "add" not "added"
-- Body only when "why" is non-obvious
-- Stage changes before invoking
+- Subject ≤72 chars, lowercase, no trailing period, imperative mood ("add" not "added").
+- Body only when the "why" is non-obvious.
+- This skill never invents a branch or pushes — it only commits.

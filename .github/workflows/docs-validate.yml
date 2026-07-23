@@ -11,7 +11,7 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: derekwinters/chores-web-actions/actions/setup-python@19729c4d6ee3366dc32f4bd8946cb8ac7f6b05e5
         with:
           requirements-path: docs/requirements.txt
@@ -28,7 +28,7 @@ jobs:
     env:
       JWT_SECRET: docs-smoke-test-secret
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Boot the documented deployment stack
         working-directory: docs/deployment
         run: docker compose up -d --wait --wait-timeout 180
@@ -60,7 +60,7 @@ jobs:
       JWT_SECRET: docs-smoke-test-secret
       DOMAIN: localhost
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Use Caddy's internal CA instead of Let's Encrypt for this test
         working-directory: docs/deployment
         run: |

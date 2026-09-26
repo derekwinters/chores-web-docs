@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -27,7 +27,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1591,9 +1591,9 @@ docker-compose<span class="w"> </span>logs<span class="w"> </span>db
 
 <span class="c1"># Test connection from backend</span>
 docker-compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>backend<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">&quot;from app.database import engine; \</span>
+<span class="w">  </span><span class="s2">"from app.database import engine; \</span>
 <span class="s2">   import asyncio; \</span>
-<span class="s2">   asyncio.run(engine.connect())&quot;</span>
+<span class="s2">   asyncio.run(engine.connect())"</span>
 </code></pre></div>
 <p><strong>Common issues:</strong>
 - DATABASE_URL format incorrect (missing <code>+asyncpg</code>)
@@ -1605,7 +1605,7 @@ docker-compose<span class="w"> </span><span class="nb">exec</span><span class="w
 <p><strong>Slow queries:</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># Enable query logging in PostgreSQL</span>
 <span class="c1"># Add to docker-compose.yml postgres environment:</span>
-POSTGRES_INIT_ARGS:<span class="w"> </span><span class="s2">&quot;-c log_statement=all&quot;</span>
+POSTGRES_INIT_ARGS:<span class="w"> </span><span class="s2">"-c log_statement=all"</span>
 
 <span class="c1"># Check logs</span>
 docker-compose<span class="w"> </span>logs<span class="w"> </span>db<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>query
@@ -1613,7 +1613,7 @@ docker-compose<span class="w"> </span>logs<span class="w"> </span>db<span class=
 <p><strong>Connection pool issues:</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check active connections</span>
 docker-compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>db<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>chores<span class="w"> </span>-d<span class="w"> </span>chores<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) FROM pg_stat_activity;&quot;</span>
+<span class="w">  </span>-c<span class="w"> </span><span class="s2">"SELECT count(*) FROM pg_stat_activity;"</span>
 </code></pre></div></p>
 <h3 id="cors-errors">CORS Errors<a class="headerlink" href="#cors-errors" title="Permanent link">&para;</a></h3>
 <p>The bundled stack should never produce CORS errors: the frontend calls
@@ -1663,22 +1663,22 @@ so no cross-origin request occurs. If you see CORS errors:</p>
 <p><strong>Debug auth issues:</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># Check token blacklist</span>
 docker-compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>db<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>chores<span class="w"> </span>-d<span class="w"> </span>chores<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT * FROM token_blacklist;&quot;</span>
+<span class="w">  </span>-c<span class="w"> </span><span class="s2">"SELECT * FROM token_blacklist;"</span>
 
 <span class="c1"># Check active users</span>
 docker-compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>db<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>chores<span class="w"> </span>-d<span class="w"> </span>chores<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT id, username, is_admin FROM person;&quot;</span>
+<span class="w">  </span>-c<span class="w"> </span><span class="s2">"SELECT id, username, is_admin FROM person;"</span>
 </code></pre></div></p>
 <h3 id="container-startup-issues">Container Startup Issues<a class="headerlink" href="#container-startup-issues" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># View startup logs</span>
 docker-compose<span class="w"> </span>logs<span class="w"> </span>backend<span class="w"> </span>--tail<span class="w"> </span><span class="m">100</span>
 
 <span class="c1"># Common errors:</span>
-<span class="c1"># &quot;Connection refused&quot; - database not ready</span>
+<span class="c1"># "Connection refused" - database not ready</span>
 <span class="c1">#   Solution: Wait for db container to be healthy, check logs</span>
-<span class="c1"># &quot;Address already in use&quot; - port conflict</span>
+<span class="c1"># "Address already in use" - port conflict</span>
 <span class="c1">#   Solution: Change ports in docker-compose.yml or kill existing process</span>
-<span class="c1"># &quot;Schema mismatch&quot; - database schema outdated</span>
+<span class="c1"># "Schema mismatch" - database schema outdated</span>
 <span class="c1">#   Solution: Backend auto-creates schema on startup, check db logs</span>
 </code></pre></div>
 <h3 id="network-issues-between-containers">Network Issues Between Containers<a class="headerlink" href="#network-issues-between-containers" title="Permanent link">&para;</a></h3>
@@ -1706,10 +1706,10 @@ docker<span class="w"> </span>stack<span class="w"> </span>deploy<span class="w"
 <span class="w">  </span><span class="nt">redis</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis:latest</span>
 <span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;6379:6379&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"6379:6379"</span>
 </code></pre></div></p>
 <p>Then implement caching in FastAPI:
-<div class="highlight"><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/chores&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"/chores"</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">list_chores</span><span class="p">(</span><span class="n">cache</span><span class="p">:</span> <span class="n">Redis</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">get_redis</span><span class="p">)):</span>
     <span class="c1"># Check cache first</span>
     <span class="c1"># Fall back to database</span>
@@ -1909,7 +1909,7 @@ docker-compose<span class="w"> </span>down
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "content.code.annotate", "navigation.tabs", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

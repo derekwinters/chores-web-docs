@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1151,7 +1151,7 @@ the file you see here is known to work.</p>
 <span class="c1"># builds the docs.</span>
 <span class="c1">#</span>
 <span class="c1"># Quick start:</span>
-<span class="c1">#   echo &quot;JWT_SECRET=$(openssl rand -hex 32)&quot; &gt; .env</span>
+<span class="c1">#   echo "JWT_SECRET=$(openssl rand -hex 32)" &gt; .env</span>
 <span class="c1">#   docker compose up -d</span>
 <span class="c1">#</span>
 <span class="c1"># Images default to :latest. For production, pin both to the same released</span>
@@ -1167,7 +1167,7 @@ the file you see here is known to work.</p>
 <span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chores-postgres:/var/lib/postgresql/data</span>
 <span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD-SHELL&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;pg_isready</span><span class="nv"> </span><span class="s">-U</span><span class="nv"> </span><span class="s">chores&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"CMD-SHELL"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"pg_isready</span><span class="nv"> </span><span class="s">-U</span><span class="nv"> </span><span class="s">chores"</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
 <span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
 <span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
@@ -1176,14 +1176,14 @@ the file you see here is known to work.</p>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/derekwinters/chores-web-backend:latest</span><span class="w"> </span><span class="c1"># v2.2.0</span>
 <span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgresql+asyncpg://chores:chores@db/chores</span>
-<span class="w">      </span><span class="nt">JWT_SECRET</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${JWT_SECRET:?Set</span><span class="nv"> </span><span class="s">JWT_SECRET</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">.env</span><span class="nv"> </span><span class="s">—</span><span class="nv"> </span><span class="s">generate</span><span class="nv"> </span><span class="s">one</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">&#39;openssl</span><span class="nv"> </span><span class="s">rand</span><span class="nv"> </span><span class="s">-hex</span><span class="nv"> </span><span class="s">32&#39;}&quot;</span>
+<span class="w">      </span><span class="nt">JWT_SECRET</span><span class="p">:</span><span class="w"> </span><span class="s">"${JWT_SECRET:?Set</span><span class="nv"> </span><span class="s">JWT_SECRET</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">.env</span><span class="nv"> </span><span class="s">—</span><span class="nv"> </span><span class="s">generate</span><span class="nv"> </span><span class="s">one</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">'openssl</span><span class="nv"> </span><span class="s">rand</span><span class="nv"> </span><span class="s">-hex</span><span class="nv"> </span><span class="s">32'}"</span>
 <span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8000:8000&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"8000:8000"</span>
 <span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">db</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service_healthy</span>
 <span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD-SHELL&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;python</span><span class="nv"> </span><span class="s">-c</span><span class="nv"> </span><span class="s">\&quot;import</span><span class="nv"> </span><span class="s">urllib.request;</span><span class="nv"> </span><span class="s">urllib.request.urlopen(&#39;http://localhost:8000/health&#39;)\&quot;</span><span class="nv"> </span><span class="s">||</span><span class="nv"> </span><span class="s">exit</span><span class="nv"> </span><span class="s">1&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"CMD-SHELL"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"python</span><span class="nv"> </span><span class="s">-c</span><span class="nv"> </span><span class="s">\"import</span><span class="nv"> </span><span class="s">urllib.request;</span><span class="nv"> </span><span class="s">urllib.request.urlopen('http://localhost:8000/health')\"</span><span class="nv"> </span><span class="s">||</span><span class="nv"> </span><span class="s">exit</span><span class="nv"> </span><span class="s">1"</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
 <span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
 <span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
@@ -1192,11 +1192,11 @@ the file you see here is known to work.</p>
 <span class="w">  </span><span class="nt">frontend</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/derekwinters/chores-web-frontend:latest</span><span class="w"> </span><span class="c1"># v2.3.0</span>
 <span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;3000:80&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"3000:80"</span>
 <span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">backend</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service_healthy</span>
-<span class="w">    </span><span class="c1"># No container healthcheck: nginx:alpine doesn&#39;t reliably ship wget/curl.</span>
+<span class="w">    </span><span class="c1"># No container healthcheck: nginx:alpine doesn't reliably ship wget/curl.</span>
 <span class="w">    </span><span class="c1"># Nginx itself starts near-instantly, so an external HTTP check (see the</span>
 <span class="w">    </span><span class="c1"># docs CI smoke test) is a more faithful signal than a shelled-out probe.</span>
 
@@ -1208,7 +1208,7 @@ the file you see here is known to work.</p>
 curl<span class="w"> </span>-fsSLO<span class="w"> </span>https://raw.githubusercontent.com/derekwinters/chores-web-docs/main/docs/deployment/docker-compose.yml
 
 <span class="c1"># 2. Generate the required JWT secret</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;JWT_SECRET=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-hex<span class="w"> </span><span class="m">32</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.env
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"JWT_SECRET=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-hex<span class="w"> </span><span class="m">32</span><span class="k">)</span><span class="s2">"</span><span class="w"> </span>&gt;<span class="w"> </span>.env
 
 <span class="c1"># 3. Start the stack</span>
 docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
@@ -1428,7 +1428,7 @@ recreation.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "content.code.annotate", "navigation.tabs", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

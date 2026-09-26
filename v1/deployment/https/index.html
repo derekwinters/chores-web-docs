@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1130,7 +1130,7 @@ curl<span class="w"> </span>-fsSLO<span class="w"> </span>https://raw.githubuser
 <li><strong>Set your domain</strong> in <code>.env</code> (alongside <code>JWT_SECRET</code>, see
    <a href="../setup/">Setup</a>):</li>
 </ol>
-<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;DOMAIN=chores.example.com&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.env
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">"DOMAIN=chores.example.com"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.env
 </code></pre></div>
 <ol>
 <li><strong>Start the stack with the HTTPS overlay:</strong></li>
@@ -1143,12 +1143,12 @@ curl<span class="w"> </span>-fsSLO<span class="w"> </span>https://raw.githubuser
 <div class="highlight"><span class="filename">docker-compose.https.yml</span><pre><span></span><code><span class="c1"># HTTPS overlay for the base stack (docker-compose.yml).</span>
 <span class="c1">#</span>
 <span class="c1"># Adds a Caddy reverse proxy that terminates TLS in front of the frontend</span>
-<span class="c1"># container and gets its certificate from Let&#39;s Encrypt automatically. This</span>
+<span class="c1"># container and gets its certificate from Let's Encrypt automatically. This</span>
 <span class="c1"># file only adds the `caddy` service — it does not repeat the</span>
 <span class="c1"># `db`/`backend`/`frontend` services themselves.</span>
 <span class="c1">#</span>
-<span class="c1"># The frontend&#39;s own &quot;3000:80&quot; port mapping from the base file is still</span>
-<span class="c1"># published alongside Caddy&#39;s 80/443. That&#39;s harmless for a host that&#39;s</span>
+<span class="c1"># The frontend's own "3000:80" port mapping from the base file is still</span>
+<span class="c1"># published alongside Caddy's 80/443. That's harmless for a host that's</span>
 <span class="c1"># otherwise firewalled, but in production you likely want the reverse proxy</span>
 <span class="c1"># to be the only public entrypoint — either firewall off 3000 or drop that</span>
 <span class="c1"># port mapping from your own copy of docker-compose.yml.</span>
@@ -1157,7 +1157,7 @@ curl<span class="w"> </span>-fsSLO<span class="w"> </span>https://raw.githubuser
 <span class="c1">#   docker compose -f docker-compose.yml -f docker-compose.https.yml up -d</span>
 <span class="c1">#</span>
 <span class="c1"># Requires:</span>
-<span class="c1">#   - A domain&#39;s DNS A/AAAA record pointing at this host</span>
+<span class="c1">#   - A domain's DNS A/AAAA record pointing at this host</span>
 <span class="c1">#   - Ports 80 and 443 reachable from the internet (80 is used for the</span>
 <span class="c1">#     ACME HTTP-01 challenge and to redirect to HTTPS)</span>
 <span class="c1">#   - DOMAIN set in .env, e.g. DOMAIN=chores.example.com</span>
@@ -1166,10 +1166,10 @@ curl<span class="w"> </span>-fsSLO<span class="w"> </span>https://raw.githubuser
 <span class="w">  </span><span class="nt">caddy</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">caddy:2-alpine</span>
 <span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;80:80&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;443:443&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"80:80"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"443:443"</span>
 <span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">DOMAIN</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${DOMAIN:?Set</span><span class="nv"> </span><span class="s">DOMAIN</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">.env,</span><span class="nv"> </span><span class="s">e.g.</span><span class="nv"> </span><span class="s">DOMAIN=chores.example.com}&quot;</span>
+<span class="w">      </span><span class="nt">DOMAIN</span><span class="p">:</span><span class="w"> </span><span class="s">"${DOMAIN:?Set</span><span class="nv"> </span><span class="s">DOMAIN</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">.env,</span><span class="nv"> </span><span class="s">e.g.</span><span class="nv"> </span><span class="s">DOMAIN=chores.example.com}"</span>
 <span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./Caddyfile:/etc/caddy/Caddyfile:ro</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chores-caddy-data:/data</span>
@@ -1182,18 +1182,18 @@ curl<span class="w"> </span>-fsSLO<span class="w"> </span>https://raw.githubuser
 <span class="w">  </span><span class="nt">chores-caddy-data</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">chores-caddy-config</span><span class="p">:</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Caddyfile</span><pre><span></span><code># Caddyfile for the docker-compose.https.yml overlay.
-#
-# Caddy requests and renews the Let&#39;s Encrypt certificate for {$DOMAIN}
-# automatically — no certbot, no cron job, no manual renewal step. It also
-# redirects plain HTTP to HTTPS by default.
-{$DOMAIN} {
-    reverse_proxy frontend:80 {
-        header_up X-Forwarded-Proto {scheme}
-        header_up X-Forwarded-For {remote_host}
-        header_up Host {host}
-    }
-}
+<div class="highlight"><span class="filename">Caddyfile</span><pre><span></span><code><span class="c1"># Caddyfile for the docker-compose.https.yml overlay.</span>
+<span class="c1">#</span>
+<span class="c1"># Caddy requests and renews the Let's Encrypt certificate for {$DOMAIN}</span>
+<span class="c1"># automatically — no certbot, no cron job, no manual renewal step. It also</span>
+<span class="c1"># redirects plain HTTP to HTTPS by default.</span>
+<span class="nv">{$DOMAIN}</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">reverse_proxy</span><span class="w"> </span>frontend:80<span class="w"> </span><span class="p">{</span>
+<span class="w">        </span>header_up<span class="w"> </span>X-Forwarded-Proto<span class="w"> </span><span class="nv">{scheme}</span>
+<span class="w">        </span>header_up<span class="w"> </span>X-Forwarded-For<span class="w"> </span><span class="nv">{remote_host}</span>
+<span class="w">        </span>header_up<span class="w"> </span>Host<span class="w"> </span><span class="nv">{host}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
 <h3 id="verifying-renewal">Verifying renewal<a class="headerlink" href="#verifying-renewal" title="Permanent link">&para;</a></h3>
 <p>Caddy renews certificates automatically in the background well before
@@ -1252,7 +1252,7 @@ acquisition, renewal, and reloading nginx after each renewal.</p>
    days. Run <code>certbot renew</code> on a schedule (systemd timer or cron) and
    reload nginx afterward so it picks up the renewed certificate:</li>
 </ol>
-<div class="highlight"><pre><span></span><code>certbot<span class="w"> </span>renew<span class="w"> </span>--quiet<span class="w"> </span>--deploy-hook<span class="w"> </span><span class="s2">&quot;docker compose exec nginx nginx -s reload&quot;</span>
+<div class="highlight"><pre><span></span><code>certbot<span class="w"> </span>renew<span class="w"> </span>--quiet<span class="w"> </span>--deploy-hook<span class="w"> </span><span class="s2">"docker compose exec nginx nginx -s reload"</span>
 </code></pre></div>
 <p>Verify the renewal path works without waiting 90 days:</p>
 <div class="highlight"><pre><span></span><code>certbot<span class="w"> </span>renew<span class="w"> </span>--dry-run
@@ -1270,27 +1270,27 @@ container labels on the <code>frontend</code> service:</p>
 <span class="w">  </span><span class="nt">traefik</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">traefik:v3</span>
 <span class="w">    </span><span class="nt">command</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;--providers.docker=true&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;--entrypoints.web.address=:80&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;--entrypoints.websecure.address=:443&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;--certificatesresolvers.le.acme.httpchallenge=true&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;--certificatesresolvers.le.acme.httpchallenge.entrypoint=web&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;--certificatesresolvers.le.acme.email=you@example.com&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"--providers.docker=true"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"--entrypoints.web.address=:80"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"--entrypoints.websecure.address=:443"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"--certificatesresolvers.le.acme.httpchallenge=true"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"--certificatesresolvers.le.acme.email=you@example.com"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"</span>
 <span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;80:80&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;443:443&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"80:80"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"443:443"</span>
 <span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/var/run/docker.sock:/var/run/docker.sock:ro</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chores-traefik-acme:/letsencrypt</span>
 
 <span class="w">  </span><span class="nt">frontend</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;traefik.enable=true&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;traefik.http.routers.chores.rule=Host(`chores.example.com`)&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;traefik.http.routers.chores.entrypoints=websecure&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;traefik.http.routers.chores.tls.certresolver=le&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;traefik.http.services.chores.loadbalancer.server.port=80&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"traefik.enable=true"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"traefik.http.routers.chores.rule=Host(`chores.example.com`)"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"traefik.http.routers.chores.entrypoints=websecure"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"traefik.http.routers.chores.tls.certresolver=le"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"traefik.http.services.chores.loadbalancer.server.port=80"</span>
 
 <span class="nt">volumes</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">chores-traefik-acme</span><span class="p">:</span>
@@ -1428,7 +1428,7 @@ the backend, update <code>allow_origins</code> to your HTTPS origin — see
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "content.code.annotate", "navigation.tabs", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

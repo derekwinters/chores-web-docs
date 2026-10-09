@@ -54,3 +54,5 @@ new docs version tree on the next deploy.
   an orchestrating/main Claude Code session directly. The orchestrating
   session delegates, reviews CI, and merges, applying the rule above to
   whatever squash title it chooses.
+
+@.ai-sdlc/house-rules.md
